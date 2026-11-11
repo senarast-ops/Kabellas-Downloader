@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Core Client-Side Processing Libraries (v3.5 Stack Dipertahankan Penuh) -->
+  <!-- Core Client-Side Processing Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
@@ -22,9 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 
-  <!-- FFmpeg WebAssembly v0.12.10 (v3.5 Core Fixed Absolute Worker) -->
-  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
-  <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
+  <!-- FFmpeg Single-Thread Engine (Zero Worker Import Bug, 100% GitHub Pages Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 
   <style>
     :root { color-scheme: dark; }
@@ -102,7 +101,7 @@
     </div>
   </header>
 
-  <!-- Modal Konfigurasi Big Cloud (Cloudinary 25GB Free Tier + Custom Endpoint) -->
+  <!-- Modal Konfigurasi Big Cloud (Cloudinary 25GB Free Tier) -->
   <div id="cloudModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
     <div class="glass-panel rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-cyan-500/30 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
@@ -121,11 +120,11 @@
       </div>
 
       <div class="bg-indigo-500/10 border border-indigo-500/25 rounded-2xl p-3.5 text-xs text-slate-300 leading-relaxed mb-4">
-        <p class="font-bold text-indigo-300 mb-1"><i class="fa-solid fa-server mr-1"></i> Rekomendasi Cloud Besar Gratis: Cloudinary Media Cloud</p>
+        <p class="font-bold text-indigo-300 mb-1"><i class="fa-solid fa-server mr-1"></i> Cloud Besar Gratis: Cloudinary Media Cloud (25 GB/bulan)</p>
         <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-300">
-          <li>Daftar gratis (25 GB/bulan) di <strong>cloudinary.com</strong> lalu salin <strong>Cloud Name</strong> di Dashboard.</li>
+          <li>Daftar gratis di <strong>cloudinary.com</strong> lalu salin <strong>Cloud Name</strong> di Dashboard.</li>
           <li>Buka <strong>Settings &rarr; Upload &rarr; Add Upload Preset</strong>, ubah <em>Signing Mode</em> ke <strong>Unsigned</strong>, lalu klik Save.</li>
-          <li>Tempel kedua kode tersebut di bawah ini agar SenHub Studio sanggup mengunggah potongan per 20 MB (<em>Chunked Upload</em>) dan merender di server Cloud.</li>
+          <li>Tempel kedua nama tersebut di bawah ini untuk mengaktifkan <em>Chunked Upload</em> (20 MB per potong).</li>
         </ol>
       </div>
 
@@ -266,7 +265,7 @@
             <select id="videoEngineRoute" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-semibold text-cyan-300 outline-none">
               <option value="auto">Otomatis (Smart Hybrid)</option>
               <option value="cloud">Paksa Big Cloud Engine (File Besar)</option>
-              <option value="local">Paksa Browser Lokal (FFmpeg.wasm)</option>
+              <option value="local">Paksa Browser Lokal (Single-Thread)</option>
             </select>
           </div>
 
@@ -298,7 +297,7 @@
               <label class="block text-xs font-semibold text-slate-300 mb-1.5">Preset Kualitas</label>
               <select id="videoQuality" class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
                 <option value="balanced">Seimbang (Standar Cepat)</option>
-                <option value="fastcopy">Kilat Stream Copy (Tanpa Re-encode)</option>
+                <option value="fastcopy">Kilat Stream Copy (1 Detik*)</option>
                 <option value="high">Kualitas Tinggi (Tajam)</option>
                 <option value="small">Kompres Ukuran Kecil (WA)</option>
               </select>
@@ -657,7 +656,7 @@
 
       <div class="space-y-2 text-xs text-slate-400 leading-relaxed">
         <p>
-          <strong>Pernyataan Tujuan & Penggunaan Bijak:</strong> Website <strong>SenHub Studio</strong> dibuat dan dikembangkan oleh <strong>kabellasensen</strong> dengan tujuan edukasi teknologi pemrosesan media modern (Hybrid WebAssembly & Cloud Chunked Transcoding) sekaligus menunjang produktivitas konversi file sehari-hari.
+          <strong>Pernyataan Tujuan & Penggunaan Bijak:</strong> Website <strong>SenHub Studio</strong> dibuat dan dikembangkan oleh <strong>kabellasensen</strong> dengan tujuan edukasi teknologi pemrosesan media modern (Hybrid Single-Thread WebAssembly & Cloud Chunked Transcoding) sekaligus menunjang produktivitas konversi file sehari-hari.
         </p>
         <p>
           Harap gunakan layanan ini secara bijak untuk mengelola karya pribadi, dokumen kerja/pendidikan, atau media dengan izin resmi dari pemilik hak cipta sesuai ketentuan layanan masing-masing platform.
@@ -673,7 +672,7 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- LOGIKA UTAMA v3.5 (FIXED WORKER + CLOUDINARY CHUNKED BIG CLOUD)       -->
+  <!-- LOGIKA UTAMA v3.5 HYBRID (ZERO WORKER BUG + CLOUDINARY BIG CLOUD)     -->
   <!-- ===================================================================== -->
   <script>
     if (window.pdfjsLib) {
@@ -686,8 +685,9 @@
     let currentDocMode = "doc2pdf";
     let ffmpegInstance = null;
     let ffmpegLoadingPromise = null;
+    let ffmpegProgressHook = null;
+    let lastFfmpegLog = "";
 
-    // Utilitas Dasar
     function formatBytes(bytes) {
       if (!bytes || bytes === 0) return "0 B";
       const k = 1024;
@@ -716,7 +716,7 @@
       activeBlobUrls = [];
     }
 
-    // Manajemen Konfigurasi Cloud Besar (Disimpan di localStorage Browser)
+    // Manajemen Konfigurasi Cloud Besar
     function getCloudConfig() {
       try {
         const raw = JSON.parse(localStorage.getItem("senhub_v35_cloud") || "{}");
@@ -751,7 +751,6 @@
       document.getElementById("cfgThresholdMb").value = String(cfg.thresholdMb);
     }
 
-    // Modal Cloud Listeners
     const cloudModal = document.getElementById("cloudModal");
     const quickSetupCloudBtn = document.getElementById("quickSetupCloudBtn");
     document.getElementById("openCloudModalBtn").addEventListener("click", () => cloudModal.classList.remove("hidden"));
@@ -827,7 +826,6 @@
       emptyOutputState.classList.remove("hidden");
     }
 
-    // Mendukung output Blob Lokal maupun URL Langsung dari Cloud Besar
     function addOutputCard({ blob, remoteUrl, filename, subtitle, previewType }) {
       emptyOutputState.classList.add("hidden");
       outputList.classList.remove("hidden");
@@ -883,40 +881,37 @@
     }
 
     // =====================================================================
-    // MESIN 1 (LOKAL v3.5 FIXED): FFMPEG.WASM v0.12 DENGAN ABSOLUTE WORKER
+    // MESIN 1 (LOKAL STABIL): @ffmpeg/core-st@0.11.1 (TANPA DYNAMIC IMPORT!)
+    // Menuntaskan 100% error "failed to import ffmpeg-core.js" di GitHub Pages
     // =====================================================================
     async function ensureLocalFFmpeg(onProgressMsg) {
-      if (ffmpegInstance) return ffmpegInstance;
+      if (ffmpegInstance && ffmpegInstance.isLoaded()) return ffmpegInstance;
       if (ffmpegLoadingPromise) return ffmpegLoadingPromise;
 
       ffmpegLoadingPromise = (async () => {
-        const { FFmpeg } = window.FFmpegWASM;
-        const { toBlobURL } = window.FFmpegUtil;
-        const ffmpeg = new FFmpeg();
+        if (!window.FFmpeg || !window.FFmpeg.createFFmpeg) {
+          throw new Error("Pustaka FFmpeg gagal dimuat dari CDN jsDelivr. Muat ulang halaman (Ctrl+F5).");
+        }
+        if (onProgressMsg) onProgressMsg("Mengunduh mesin lokal Single-Thread (±22 MB, hanya 1x di awal)...");
 
-        if (onProgressMsg) onProgressMsg("Menyiapkan mesin lokal FFmpeg v3.5 (±25 MB, sekali saja)...");
-
-        const umdBase = "https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd";
-        const coreBase = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-
-        // PERBAIKAN BUG v3.5: Ganti path relatif "./" di dalam 814.ffmpeg.js menjadi URL absolut CDN!
-        const workerResp = await fetch(`${umdBase}/814.ffmpeg.js`);
-        let workerCode = await workerResp.text();
-        workerCode = workerCode.replace(/from\s*["']\.\/([^"']+)["']/g, `from "${umdBase}/$1"`);
-        workerCode = workerCode.replace(/importScripts\(\s*["']\.\/([^"']+)["']\s*\)/g, `importScripts("${umdBase}/$1")`);
-        // Patch webpack publicPath jika memakai chunk loader
-        workerCode = `self.__webpack_public_path__ = "${umdBase}/";\n` + workerCode;
-
-        const workerBlobUrl = URL.createObjectURL(new Blob([workerCode], { type: "text/javascript" }));
-
-        await ffmpeg.load({
-          coreURL: await toBlobURL(`${coreBase}/ffmpeg-core.js`, "text/javascript"),
-          wasmURL: await toBlobURL(`${coreBase}/ffmpeg-core.wasm`, "application/wasm"),
-          classWorkerURL: workerBlobUrl
+        const { createFFmpeg } = window.FFmpeg;
+        const instance = createFFmpeg({
+          mainName: "main",
+          corePath: "https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js",
+          log: false,
+          logger: ({ message }) => {
+            if (message) lastFfmpegLog = message;
+          },
+          progress: ({ ratio }) => {
+            if (ffmpegProgressHook && typeof ratio === "number" && ratio >= 0 && ratio <= 1) {
+              ffmpegProgressHook(ratio);
+            }
+          }
         });
 
-        ffmpegInstance = ffmpeg;
-        return ffmpeg;
+        await instance.load();
+        ffmpegInstance = instance;
+        return instance;
       })();
 
       try {
@@ -929,7 +924,6 @@
 
     // =====================================================================
     // MESIN 2 (BIG CLOUD): CLOUDINARY CHUNKED UPLOADER & TRANSCODER (GB+)
-    // Mengirim potongan 20 MB per request sehingga kuat untuk file ratusan MB / GB!
     // =====================================================================
     async function processViaBigCloud(file, options) {
       const cfg = getCloudConfig();
@@ -940,7 +934,7 @@
         );
       }
 
-      const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB per chunk (aman untuk jaringan Indonesia)
+      const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB per potong
       const totalSize = file.size;
       const totalChunks = Math.ceil(totalSize / CHUNK_SIZE);
       const uniqueUploadId = "senhub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
@@ -993,9 +987,8 @@
         });
       }
 
-      setProgress(88, "Server Cloud sedang merender & mengonversi format media...");
+      setProgress(90, "Server Cloud sedang merender & mengonversi format media...");
 
-      // Susun parameter transformasi URL Cloudinary (Format, Resolusi, Kualitas, Trim, Gain)
       const trans = [];
       if (options.trimStart > 0) trans.push(`so_${options.trimStart}`);
       if (options.trimEnd > options.trimStart) trans.push(`eo_${options.trimEnd}`);
@@ -1013,20 +1006,14 @@
         else trans.push("q_auto:good");
       }
 
-      // fl_attachment memaksa browser mengunduh file hasil jadi
       const cleanBase = getBaseName(file.name).replace(/[^a-zA-Z0-9_-]/g, "_");
       trans.push(`fl_attachment:${cleanBase}-senhub`);
 
       const transformPath = trans.join(",");
       const publicId = uploadResponse.public_id;
       const resourceType = uploadResponse.resource_type || "video";
-      const targetExt = options.targetExt;
 
-      const finalCloudUrl = `https://res.cloudinary.com/${encodeURIComponent(cfg.cloudName)}/${resourceType}/upload/${transformPath}/${publicId}.${targetExt}`;
-
-      // Pemicu pemanasan transcode di Cloud
-      setProgress(94, "Menyiapkan tautan unduhan kecepatan tinggi dari Cloud...");
-      return finalCloudUrl;
+      return `https://res.cloudinary.com/${encodeURIComponent(cfg.cloudName)}/${resourceType}/upload/${transformPath}/${publicId}.${options.targetExt}`;
     }
 
     // Navigasi 5 Tab
@@ -1087,7 +1074,7 @@
     }
 
     // =====================================================================
-    // MODUL 1: VIDEO STUDIO (HYBRID LOCAL FFmpeg v3.5 + BIG CLOUD >100MB)
+    // MODUL 1: VIDEO STUDIO (HYBRID LOCAL SINGLE-THREAD + BIG CLOUD >100MB)
     // =====================================================================
     const videoInput = document.getElementById("videoInput");
     const videoFileBadge = document.getElementById("videoFileBadge");
@@ -1136,6 +1123,9 @@
 
       clearOutputCards();
 
+      const inName = `in_${Date.now()}.${srcExt}`;
+      const outName = `out_${Date.now()}.${targetExt}`;
+
       try {
         // JALUR A: BIG CLOUD ENGINE UNTUK VIDEO SANGAT BESAR
         if (useBigCloud) {
@@ -1159,28 +1149,21 @@
           return;
         }
 
-        // JALUR B: LOKAL BROWSER ENGINE (v3.5 FFmpeg.wasm Fixed)
-        setProgress(5, "Menyiapkan mesin Video Converter v3.5...");
+        // JALUR B: LOKAL BROWSER ENGINE (Single-Thread Stable — Bebas Import Error!)
+        setProgress(5, "Menyiapkan mesin Video Converter...");
         const ffmpeg = await ensureLocalFFmpeg((msg) => setProgress(8, msg));
-        const { fetchFile } = window.FFmpegUtil;
 
-        const inName = `in_${Date.now()}.${srcExt}`;
-        const outName = `out_${Date.now()}.${targetExt}`;
+        setProgress(14, "Memuat video ke memori lokal...");
+        ffmpeg.FS("writeFile", inName, new Uint8Array(await file.arrayBuffer()));
 
-        const progressHandler = ({ progress }) => {
-          if (typeof progress === "number" && progress >= 0 && progress <= 1) {
-            setProgress(16 + Math.round(progress * 80), `Mengonversi lokal ke .${targetExt.toUpperCase()}...`);
-          }
+        ffmpegProgressHook = (ratio) => {
+          setProgress(18 + Math.round(ratio * 78), `Mengonversi lokal ke .${targetExt.toUpperCase()}...`);
         };
-        ffmpeg.on("progress", progressHandler);
-
-        setProgress(12, "Memuat video ke memori lokal...");
-        await ffmpeg.writeFile(inName, await fetchFile(file));
 
         const args = [];
         if (tStart > 0) args.push("-ss", String(tStart));
         args.push("-i", inName);
-        if (tEnd > tStart) args.push("-to", String(tEnd - tStart));
+        if (tEnd > tStart) args.push("-t", String(tEnd - tStart));
 
         const copyCompatible = ["mp4", "mkv", "mov"];
         const canFastCopy = qualOpt === "fastcopy" && resOpt === "original" && copyCompatible.includes(srcExt) && copyCompatible.includes(targetExt);
@@ -1194,35 +1177,41 @@
           mimeType = targetExt === "mkv" ? "video/x-matroska" : targetExt === "mov" ? "video/quicktime" : "video/mp4";
         } else if (targetExt === "gif") {
           const sc = resOpt !== "original" ? `scale=-2:${resOpt}:flags=lanczos` : "scale=480:-1:flags=lanczos";
-          args.push("-vf", `fps=12,${sc}`);
+          args.push("-vf", `fps=10,${sc}`, "-loop", "0");
           mimeType = "image/gif";
           previewKind = "image";
         } else if (targetExt === "webm") {
           if (resOpt !== "original") args.push("-vf", `scale=-2:${resOpt}`);
-          const bv = qualOpt === "high" ? "1800k" : qualOpt === "small" ? "700k" : "1100k";
+          const bv = qualOpt === "high" ? "1600k" : qualOpt === "small" ? "650k" : "1000k";
           args.push("-c:v", "libvpx", "-b:v", bv, "-c:a", "libvorbis");
           mimeType = "video/webm";
         } else if (targetExt === "avi") {
           const vf = resOpt !== "original" ? `scale=-2:${resOpt}` : "scale=trunc(iw/2)*2:trunc(ih/2)*2";
           const qv = qualOpt === "high" ? "4" : qualOpt === "small" ? "10" : "6";
-          args.push("-vf", vf, "-c:v", "mpeg4", "-q:v", qv, "-c:a", "libmp3lame", "-b:a", "192k");
+          args.push("-vf", vf, "-c:v", "mpeg4", "-q:v", qv, "-c:a", "libmp3lame", "-b:a", "160k");
           mimeType = "video/x-msvideo";
         } else {
           const vf = resOpt !== "original" ? `scale=-2:${resOpt}` : "scale=trunc(iw/2)*2:trunc(ih/2)*2";
-          const crf = qualOpt === "high" ? "21" : qualOpt === "small" ? "31" : "26";
-          args.push("-vf", vf, "-c:v", "libx264", "-preset", "ultrafast", "-crf", crf, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k");
+          const crf = qualOpt === "high" ? "22" : qualOpt === "small" ? "31" : "26";
+          args.push("-vf", vf, "-c:v", "libx264", "-preset", "ultrafast", "-crf", crf, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k");
           if (targetExt === "mp4" || targetExt === "mov") args.push("-movflags", "+faststart");
           mimeType = targetExt === "mkv" ? "video/x-matroska" : targetExt === "mov" ? "video/quicktime" : "video/mp4";
         }
 
         args.push(outName);
-        setProgress(16, `Memproses konversi ke .${targetExt.toUpperCase()}...`);
-        await ffmpeg.exec(args);
+        setProgress(18, `Memproses konversi ke .${targetExt.toUpperCase()}...`);
+        await ffmpeg.run(...args);
 
-        const outData = await ffmpeg.readFile(outName);
-        await ffmpeg.deleteFile(inName).catch(() => {});
-        await ffmpeg.deleteFile(outName).catch(() => {});
-        ffmpeg.off("progress", progressHandler);
+        let outData;
+        try {
+          outData = ffmpeg.FS("readFile", outName);
+        } catch {
+          throw new Error("Proses encode berhenti (" + (lastFfmpegLog || "Codec tidak cocok") + "). Coba pilih Preset 'Kilat Stream Copy' atau Resolusi 480p.");
+        }
+
+        try { ffmpeg.FS("unlink", inName); } catch {}
+        try { ffmpeg.FS("unlink", outName); } catch {}
+        ffmpegProgressHook = null;
 
         const outBlob = new Blob([outData.buffer], { type: mimeType });
         setProgress(100, "Konversi Video Selesai!");
@@ -1233,6 +1222,9 @@
           previewType: previewKind
         });
       } catch (err) {
+        ffmpegProgressHook = null;
+        try { ffmpegInstance?.FS("unlink", inName); } catch {}
+        try { ffmpegInstance?.FS("unlink", outName); } catch {}
         hideProgress();
         if (!isCloudConfigured() && file.size > 80 * 1024 * 1024) {
           quickSetupCloudBtn.classList.remove("hidden");
@@ -1384,11 +1376,13 @@
 
       clearOutputCards();
 
+      const inName = `in_aud_${Date.now()}.${getExtension(file.name)}`;
+      const outName = `out_aud_${Date.now()}.${target.ext}`;
+
       try {
         const cfg = getCloudConfig();
         const sizeMb = file.size / (1024 * 1024);
 
-        // Jika file sumber sangat besar (misal video konser 500 MB mau diambil FLAC/MP3-nya), arahkan ke Big Cloud
         if (sizeMb >= cfg.thresholdMb && isCloudConfigured()) {
           const cloudAudioUrl = await processViaBigCloud(file, {
             isAudioOnly: true,
@@ -1439,27 +1433,20 @@
           return;
         }
 
-        // FFmpeg Lokal v3.5 Fixed
-        setProgress(8, "Menyiapkan mesin Hi-Res Audio v3.5...");
+        // FFmpeg Lokal Single-Thread Stabil
+        setProgress(8, "Menyiapkan mesin Hi-Res Audio...");
         const ffmpeg = await ensureLocalFFmpeg((msg) => setProgress(10, msg));
-        const { fetchFile } = window.FFmpegUtil;
 
-        const inName = `in_aud_${Date.now()}.${getExtension(file.name)}`;
-        const outName = `out_aud_${Date.now()}.${target.ext}`;
-
-        const progressHandler = ({ progress }) => {
-          if (typeof progress === "number" && progress >= 0 && progress <= 1) {
-            setProgress(20 + Math.round(progress * 75), `Mengenkode ${target.label}...`);
-          }
+        ffmpegProgressHook = (ratio) => {
+          setProgress(20 + Math.round(ratio * 75), `Mengenkode ${target.label}...`);
         };
-        ffmpeg.on("progress", progressHandler);
 
-        await ffmpeg.writeFile(inName, await fetchFile(file));
+        ffmpeg.FS("writeFile", inName, new Uint8Array(await file.arrayBuffer()));
 
         const args = [];
         if (tStart > 0) args.push("-ss", String(tStart));
         args.push("-i", inName);
-        if (tEnd > tStart) args.push("-to", String(tEnd - tStart));
+        if (tEnd > tStart) args.push("-t", String(tEnd - tStart));
         args.push("-vn");
 
         if (gain !== 1) args.push("-af", `volume=${gain.toFixed(2)}`);
@@ -1473,12 +1460,12 @@
         else if (fmt.startsWith("mp3")) args.push("-c:a", "libmp3lame", "-b:a", fmt.split("_")[1] + "k");
 
         args.push(outName);
-        await ffmpeg.exec(args);
+        await ffmpeg.run(...args);
 
-        const outData = await ffmpeg.readFile(outName);
-        await ffmpeg.deleteFile(inName).catch(() => {});
-        await ffmpeg.deleteFile(outName).catch(() => {});
-        ffmpeg.off("progress", progressHandler);
+        const outData = ffmpeg.FS("readFile", outName);
+        try { ffmpeg.FS("unlink", inName); } catch {}
+        try { ffmpeg.FS("unlink", outName); } catch {}
+        ffmpegProgressHook = null;
 
         const outBlob = new Blob([outData.buffer], { type: target.mime });
         setProgress(100, "Konversi Audio Selesai!");
@@ -1489,6 +1476,9 @@
           previewType: "audio"
         });
       } catch (err) {
+        ffmpegProgressHook = null;
+        try { ffmpegInstance?.FS("unlink", inName); } catch {}
+        try { ffmpegInstance?.FS("unlink", outName); } catch {}
         hideProgress();
         if (!isCloudConfigured() && file.size > 80 * 1024 * 1024) {
           quickSetupCloudBtn.classList.remove("hidden");
@@ -1965,7 +1955,6 @@
       activityLog.innerHTML = '<p class="text-[11px] text-slate-500 italic">Belum ada aktivitas pada sesi ini.</p>';
     });
 
-    // Inisialisasi status Cloud
     refreshCloudNavbarIndicator();
   </script>
 </body>
