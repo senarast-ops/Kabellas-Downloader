@@ -2,244 +2,532 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SenHub — Media Inspector & Direct Hi-Res Downloader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>SenHub Studio — All-in-One Media, Image, PDF & Doc Converter</title>
+
+  <!-- UI Framework & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Core Client-Side Processing Libraries (100% Static GitHub Pages Compatible) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+
   <style>
+    :root {
+      color-scheme: dark;
+    }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: radial-gradient(circle at top, #1e1b4b 0%, #090d16 55%, #05070c 100%);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.16) 0%, transparent 40%),
+        radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        #060913;
       min-height: 100vh;
       color: #f8fafc;
+      overflow-x: hidden;
     }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(148, 163, 184, 0.15);
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
     }
+    .nav-pill-active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(99, 102, 241, 0.28));
+      border-color: rgba(34, 211, 238, 0.55) !important;
+      color: #ffffff !important;
+      box-shadow: 0 8px 25px -6px rgba(6, 182, 212, 0.3);
+    }
+    .subtab-active {
+      background: linear-gradient(135deg, #06b6d4, #6366f1);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+    .drop-active {
+      border-color: #22d3ee !important;
+      background: rgba(6, 182, 212, 0.08) !important;
+      transform: scale(1.005);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
 </head>
-<body class="antialiased selection:bg-cyan-500 selection:text-white pb-14">
+<body class="antialiased selection:bg-cyan-500 selection:text-white pb-16">
 
-  <!-- Navbar -->
-  <header class="border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md sticky top-0 z-30">
-    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+  <!-- Top Navbar -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/75 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <i class="fa-solid fa-cloud-arrow-down text-white text-lg"></i>
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/25 shrink-0">
+          <i class="fa-solid fa-wand-magic-sparkles text-white text-base"></i>
         </div>
         <div>
-          <h1 class="font-extrabold text-lg tracking-tight leading-none">
-            Sen<span class="text-cyan-400">Hub</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold ml-1">v2.1</span>
-          </h1>
-          <p class="text-xs text-slate-400 mt-0.5">by kabellasensen • Media Utility</p>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight leading-none">
+              Sen<span class="text-cyan-400">Hub</span> <span class="font-semibold text-slate-300 text-sm sm:text-base">Studio</span>
+            </h1>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 font-bold">v3.0</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-0.5">by kabellasensen • All-in-One Local Converter</p>
         </div>
       </div>
 
-      <button id="sampleMediaBtn" type="button" class="flex items-center gap-2 text-xs font-semibold text-cyan-300 hover:text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-700 transition">
-        <i class="fa-solid fa-vial"></i>
-        <span>Tes Sampel File Langsung</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:flex items-center gap-2 text-xs font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1.5 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          100% Private In-Browser
+        </div>
+        <button id="resetAllBtn" type="button" title="Bersihkan Ruang Kerja" class="text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate-right text-cyan-400"></i>
+          <span class="hidden xs:inline">Reset</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 pt-8">
+  <main class="max-w-6xl mx-auto px-4 pt-6 sm:pt-9">
 
-    <!-- Hero -->
-    <div class="text-center max-w-2xl mx-auto mb-7">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-3">
-        <i class="fa-solid fa-graduation-cap"></i> Proyek Edukasi Web • Metadata, Thumbnail HD & Direct Media
+    <!-- Hero Header -->
+    <section class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-[11px] sm:text-xs font-semibold mb-3">
+        <i class="fa-solid fa-shield-halved text-cyan-400"></i> Tanpa Upload ke Server • Bebas Kuota & Aman untuk HP/PC
       </div>
-      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2.5 bg-gradient-to-r from-white via-slate-200 to-cyan-300 bg-clip-text text-transparent">
-        SenHub Media Inspector & Downloader
+      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent mb-2">
+        Konversi Media, Gambar, PDF & Dokumen
       </h2>
-      <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
-        Periksa metadata, putar pratinjau resmi, unduh <em>thumbnail</em> resolusi tinggi dari YouTube/TikTok, atau unduh langsung file audio/video terbuka (.mp4, .mp3, .wav, .flac).
+      <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+        Pilih kategori alat di bawah ini. Seluruh proses konversi dijalankan langsung oleh prosesor perangkat Anda dengan kecepatan tinggi dan privasi penuh.
       </p>
+    </section>
+
+    <!-- 4 Pilar Utama (Mobile 2x2 Grid, Desktop 4 Columns) -->
+    <nav class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 mb-6" aria-label="Kategori Konverter">
+      <button type="button" data-module="media" class="module-tab nav-pill-active glass-panel rounded-2xl p-3.5 sm:p-4 text-left transition flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-wave-square text-base sm:text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-xs sm:text-sm truncate">Video & Audio</div>
+          <div class="text-[10px] sm:text-xs text-slate-400 truncate">WAV 24-bit, MP3, WebM</div>
+        </div>
+      </button>
+
+      <button type="button" data-module="image" class="module-tab glass-panel rounded-2xl p-3.5 sm:p-4 text-left text-slate-300 hover:text-white transition flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-fuchsia-500/15 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400 shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-images text-base sm:text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-xs sm:text-sm truncate">Image Studio</div>
+          <div class="text-[10px] sm:text-xs text-slate-400 truncate">WebP, PNG, JPG, HEIC</div>
+        </div>
+      </button>
+
+      <button type="button" data-module="pdf" class="module-tab glass-panel rounded-2xl p-3.5 sm:p-4 text-left text-slate-300 hover:text-white transition flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-file-pdf text-base sm:text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-xs sm:text-sm truncate">PDF Converter</div>
+          <div class="text-[10px] sm:text-xs text-slate-400 truncate">PDF ⇄ Gambar & Merge</div>
+        </div>
+      </button>
+
+      <button type="button" data-module="doc" class="module-tab glass-panel rounded-2xl p-3.5 sm:p-4 text-left text-slate-300 hover:text-white transition flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 group-hover:scale-105 transition">
+          <i class="fa-solid fa-file-word text-base sm:text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-xs sm:text-sm truncate">Dokumen ⇄ PDF</div>
+          <div class="text-[10px] sm:text-xs text-slate-400 truncate">Word, Excel, TXT ⇄ PDF</div>
+        </div>
+      </button>
+    </nav>
+
+    <!-- =================================================================== -->
+    <!-- WORKSPACE UTAMA (2 Kolom di PC, 1 Kolom Penuh di Ponsel)            -->
+    <!-- =================================================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- KOLOM KIRI: Input File & Pengaturan Modul (7 Kolom) -->
+      <div class="lg:col-span-7 glass-panel rounded-3xl p-4 sm:p-6 shadow-2xl">
+
+        <!-- ================= MODUL 1: VIDEO & HI-RES AUDIO ================= -->
+        <div id="panel-media" class="module-panel space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+            <div>
+              <h3 class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+                <i class="fa-solid fa-headphones text-cyan-400"></i> Video & Hi-Res Audio Converter
+              </h3>
+              <p class="text-xs text-slate-400">Ekstrak suara video ke audio Lossless 24-bit, MP3 320kbps, atau kompres video.</p>
+            </div>
+          </div>
+
+          <!-- Dropzone Media -->
+          <label id="mediaDropzone" class="block border-2 border-dashed border-slate-700 hover:border-cyan-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/40">
+            <input id="mediaInput" type="file" accept="video/*,audio/*,.mkv,.flac,.wav,.mp3,.mp4,.mov,.webm,.m4a,.ogg" class="hidden" />
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center mx-auto mb-3 text-cyan-400">
+              <i class="fa-solid fa-clapperboard text-xl"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-200">Ketuk untuk pilih Video / Audio, atau tarik file ke sini</p>
+            <p class="text-xs text-slate-400 mt-1">Mendukung MP4, MOV, MKV, WebM, MP3, WAV, FLAC, M4A (Ideal &lt; 200 MB)</p>
+            <div id="mediaFileBadge" class="hidden mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-200 text-xs font-semibold max-w-full truncate"></div>
+          </label>
+
+          <!-- Pengaturan Konversi Media -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Format Output Target</label>
+              <select id="mediaFormat" class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="wav24">WAV Hi-Res (24-bit Studio Lossless)</option>
+                <option value="wav16">WAV CD Quality (16-bit PCM)</option>
+                <option value="mp3_320">MP3 Extreme (320 kbps)</option>
+                <option value="mp3_192">MP3 Standard (192 kbps)</option>
+                <option value="webm_video">Kompres Video (WebM VP8/VP9 + Audio)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Volume Booster / Gain: <span id="gainLabel" class="text-cyan-400 font-bold">100%</span></label>
+              <input id="mediaGain" type="range" min="50" max="200" value="100" step="10" class="w-full accent-cyan-400 mt-2 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                <span>50% (Pelan)</span>
+                <span>Normal</span>
+                <span>200% (Boost)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trim Waktu Opsional -->
+          <div class="bg-slate-900/60 border border-slate-800/90 rounded-2xl p-3.5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-300"><i class="fa-solid fa-scissors text-cyan-400 mr-1.5"></i>Potong Durasi / Trim (Opsional)</span>
+              <span id="mediaDurationInfo" class="text-[11px] text-slate-400">Durasi asli: -</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Mulai Detik ke-</label>
+                <input id="trimStart" type="number" min="0" step="0.5" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-400" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Sampai Detik ke- (0 = Penuh)</label>
+                <input id="trimEnd" type="number" min="0" step="0.5" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-400" />
+              </div>
+            </div>
+          </div>
+
+          <button id="convertMediaBtn" type="button" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Mulai Konversi Media</span>
+          </button>
+        </div>
+
+        <!-- ================= MODUL 2: IMAGE CONVERTER STUDIO ================= -->
+        <div id="panel-image" class="module-panel hidden space-y-5">
+          <div class="pb-3 border-b border-slate-800/80">
+            <h3 class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <i class="fa-solid fa-images text-fuchsia-400"></i> Batch Image Converter & Optimizer
+            </h3>
+            <p class="text-xs text-slate-400">Ubah banyak gambar sekaligus ke WebP, PNG, atau JPG (mendukung foto HEIC iPhone).</p>
+          </div>
+
+          <label id="imageDropzone" class="block border-2 border-dashed border-slate-700 hover:border-fuchsia-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/40">
+            <input id="imageInput" type="file" multiple accept="image/*,.heic,.heif" class="hidden" />
+            <div class="w-12 h-12 rounded-2xl bg-fuchsia-500/10 border border-fuchsia-500/25 flex items-center justify-center mx-auto mb-3 text-fuchsia-400">
+              <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-200">Pilih Satu atau Banyak Gambar Sekaligus</p>
+            <p class="text-xs text-slate-400 mt-1">Mendukung JPG, PNG, WebP, BMP, GIF statis & HEIC</p>
+            <div id="imageCountBadge" class="hidden mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-fuchsia-500/15 border border-fuchsia-500/30 text-fuchsia-200 text-xs font-semibold"></div>
+          </label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Format Tujuan</label>
+              <select id="imgFormat" class="w-full bg-slate-900 border border-slate-700 focus:border-fuchsia-400 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="image/webp">WebP (Modern & Ringan)</option>
+                <option value="image/jpeg">JPG / JPEG (Universal)</option>
+                <option value="image/png">PNG (Transparan Lossless)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kualitas: <span id="imgQualityVal" class="text-fuchsia-400 font-bold">88%</span></label>
+              <input id="imgQuality" type="range" min="20" max="100" value="88" class="w-full accent-fuchsia-400 mt-2 cursor-pointer" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Lebar Maks (px)</label>
+              <input id="imgMaxWidth" type="number" placeholder="Asli (Kosongkan)" class="w-full bg-slate-900 border border-slate-700 focus:border-fuchsia-400 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none" />
+            </div>
+          </div>
+
+          <button id="convertImageBtn" type="button" class="w-full bg-gradient-to-r from-fuchsia-500 to-indigo-600 hover:from-fuchsia-400 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg shadow-fuchsia-500/20 flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-wand-sparkles"></i>
+            <span>Konversi Gambar Sekarang</span>
+          </button>
+        </div>
+
+        <!-- ================= MODUL 3: PDF UTILITY & IMAGE ================= -->
+        <div id="panel-pdf" class="module-panel hidden space-y-5">
+          <div class="pb-3 border-b border-slate-800/80">
+            <h3 class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <i class="fa-solid fa-file-pdf text-rose-400"></i> PDF ⇄ Image & PDF Merger
+            </h3>
+            <p class="text-xs text-slate-400">Ubah halaman PDF menjadi gambar HD, susun foto jadi PDF A4, atau gabungkan PDF.</p>
+          </div>
+
+          <!-- Sub-Tab Mode PDF -->
+          <div class="grid grid-cols-3 gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+            <button type="button" data-pdfmode="pdf2img" class="pdf-subtab subtab-active py-2 px-2 rounded-lg text-[11px] sm:text-xs font-bold transition">
+              PDF ke Gambar
+            </button>
+            <button type="button" data-pdfmode="img2pdf" class="pdf-subtab py-2 px-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-400 hover:text-white transition">
+              Gambar ke PDF
+            </button>
+            <button type="button" data-pdfmode="mergepdf" class="pdf-subtab py-2 px-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-400 hover:text-white transition">
+              Gabung PDF
+            </button>
+          </div>
+
+          <label id="pdfDropzone" class="block border-2 border-dashed border-slate-700 hover:border-rose-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/40">
+            <input id="pdfInput" type="file" accept=".pdf" class="hidden" />
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center mx-auto mb-3 text-rose-400">
+              <i class="fa-solid fa-file-export text-xl"></i>
+            </div>
+            <p id="pdfDropTitle" class="text-sm font-bold text-slate-200">Pilih File PDF untuk Diubah ke Gambar HD</p>
+            <p id="pdfDropDesc" class="text-xs text-slate-400 mt-1">Setiap halaman PDF akan dirender tajam menjadi PNG / JPG</p>
+            <div id="pdfFileBadge" class="hidden mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs font-semibold max-w-full truncate"></div>
+          </label>
+
+          <!-- Opsi Kontekstual PDF -->
+          <div id="pdf2imgOptions" class="grid grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Format Gambar</label>
+              <select id="pdfImgFormat" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="png">PNG (Teks Sangat Tajam)</option>
+                <option value="jpeg">JPG (Ukuran Lebih Kecil)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Resolusi Render</label>
+              <select id="pdfScale" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="2">HD Tinggi (2x Scale)</option>
+                <option value="1.5">Standar Cepat (1.5x)</option>
+                <option value="3">Ultra Print (3x Scale)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="img2pdfOptions" class="hidden grid grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Orientasi Kertas A4</label>
+              <select id="pdfOrientation" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="p">Portrait (Tegak)</option>
+                <option value="l">Landscape (Mendatar)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Margin Halaman</label>
+              <select id="pdfMargin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white outline-none">
+                <option value="10">Rapi (10 mm)</option>
+                <option value="0">Penuh Tanpa Tepi (0 mm)</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="convertPdfBtn" type="button" class="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-gears"></i>
+            <span>Proses Dokumen PDF</span>
+          </button>
+        </div>
+
+        <!-- ================= MODUL 4: DOKUMEN ⇄ PDF ================= -->
+        <div id="panel-doc" class="module-panel hidden space-y-5">
+          <div class="pb-3 border-b border-slate-800/80">
+            <h3 class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+              <i class="fa-solid fa-file-word text-amber-400"></i> Office Document ⇄ PDF Converter
+            </h3>
+            <p class="text-xs text-slate-400">Ubah Word (.docx), Excel (.xlsx), atau TXT menjadi PDF, serta ekstrak PDF ke Word (.docx).</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+            <button type="button" data-docmode="doc2pdf" class="doc-subtab subtab-active py-2 px-3 rounded-lg text-xs font-bold transition">
+              Dokumen (Word/Excel/TXT) → PDF
+            </button>
+            <button type="button" data-docmode="pdf2doc" class="doc-subtab py-2 px-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition">
+              PDF → Word (.docx) / TXT
+            </button>
+          </div>
+
+          <label id="docDropzone" class="block border-2 border-dashed border-slate-700 hover:border-amber-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/40">
+            <input id="docInput" type="file" accept=".docx,.xlsx,.xls,.csv,.txt,.md" class="hidden" />
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center mx-auto mb-3 text-amber-400">
+              <i class="fa-solid fa-file-lines text-xl"></i>
+            </div>
+            <p id="docDropTitle" class="text-sm font-bold text-slate-200">Pilih File Word (.docx), Excel (.xlsx), CSV, atau TXT</p>
+            <p id="docDropDesc" class="text-xs text-slate-400 mt-1">Isi dokumen akan diformat rapi menjadi halaman PDF A4 siap cetak</p>
+            <div id="docFileBadge" class="hidden mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs font-semibold max-w-full truncate"></div>
+          </label>
+
+          <div id="pdf2docOptions" class="hidden">
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Format Dokumen Keluaran</label>
+            <select id="pdfOutDocFormat" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white outline-none">
+              <option value="docx">Microsoft Word (.docx — Bisa Diedit)</option>
+              <option value="txt">Plain Text (.txt — Teks Bersih)</option>
+            </select>
+          </div>
+
+          <button id="convertDocBtn" type="button" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-xl text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Konversi Dokumen Sekarang</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- KOLOM KANAN: Progress, Live Preview & Hasil Unduhan (5 Kolom) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Panel Status & Hasil Konversi -->
+        <section class="glass-panel rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-800/90">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-2">
+              <i class="fa-solid fa-box-open text-cyan-400"></i> Ruang Output & Unduhan
+            </h3>
+            <span id="engineStateBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-semibold">
+              Menunggu File
+            </span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div id="progressSection" class="hidden mb-5 bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span id="progressLabel" class="font-semibold text-cyan-300 flex items-center gap-2">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> Memproses...
+              </span>
+              <span id="progressPct" class="font-bold text-white">0%</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="progressBar" class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 transition-all duration-200" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Kotak Pesan Error / Info -->
+          <div id="alertBox" class="hidden mb-4 rounded-2xl p-3.5 text-xs leading-relaxed border"></div>
+
+          <!-- Placeholder Kosong -->
+          <div id="emptyOutputState" class="py-10 text-center text-slate-500">
+            <div class="w-14 h-14 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-sparkles text-slate-600 text-xl"></i>
+            </div>
+            <p class="text-xs sm:text-sm font-semibold text-slate-400">Belum Ada File yang Diproses</p>
+            <p class="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
+              Hasil konversi beserta pratinjau audio, video, gambar, atau dokumen Anda akan muncul siap unduh di sini.
+            </p>
+          </div>
+
+          <!-- Daftar Hasil Siap Download -->
+          <div id="outputList" class="hidden space-y-3"></div>
+        </section>
+
+        <!-- Riwayat Konversi Sesi Ini -->
+        <section class="glass-panel rounded-3xl p-5 border border-slate-800/80">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-xs sm:text-sm text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i> Aktivitas Konversi Terakhir
+            </h4>
+            <button id="clearLogBtn" type="button" class="text-[11px] text-slate-400 hover:text-rose-400 transition">Bersihkan</button>
+          </div>
+          <div id="activityLog" class="space-y-2 text-xs text-slate-400">
+            <p class="text-[11px] text-slate-500 italic">Belum ada aktivitas pada sesi ini.</p>
+          </div>
+        </section>
+
+      </div>
     </div>
 
-    <!-- Panel Input -->
-    <section class="glass-card rounded-2xl p-5 sm:p-7 shadow-2xl mb-7">
-      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Platform Terdeteksi:</span>
-        <div class="flex flex-wrap gap-2">
-          <span data-plat="youtube" class="plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition">
-            <i class="fa-brands fa-youtube mr-1"></i> YouTube
-          </span>
-          <span data-plat="tiktok" class="plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition">
-            <i class="fa-brands fa-tiktok mr-1"></i> TikTok
-          </span>
-          <span data-plat="instagram" class="plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition">
-            <i class="fa-brands fa-instagram mr-1"></i> Instagram
-          </span>
-          <span data-plat="direct" class="plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition">
-            <i class="fa-solid fa-file-audio mr-1"></i> Direct Media
-          </span>
-        </div>
-      </div>
+    <!-- Container Tersembunyi untuk Render Dokumen ke PDF -->
+    <div class="fixed -left-[9999px] top-0 pointer-events-none opacity-0">
+      <div id="hiddenDocRender" class="w-[794px] bg-white text-slate-900 p-10 font-sans text-sm leading-relaxed"></div>
+    </div>
 
-      <div class="flex flex-col sm:flex-row gap-3">
-        <div class="relative flex-1">
-          <input
-            id="urlInput"
-            type="url"
-            placeholder="Tempel link YouTube, TikTok, atau file langsung (.mp4 / .wav / .flac)..."
-            class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-24 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition"
-          />
-          <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            <button id="pasteBtn" type="button" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg transition">
-              Tempel
-            </button>
-            <button id="clearBtn" type="button" class="hidden p-1.5 text-slate-400 hover:text-rose-400 transition">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        </div>
-        <button
-          id="processBtn"
-          type="button"
-          class="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition active:scale-95"
-        >
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <span>Analisis Media</span>
-        </button>
-      </div>
-
-      <div id="statusBox" class="hidden mt-4 rounded-xl p-3.5 text-xs sm:text-sm border"></div>
-    </section>
-
-    <!-- Panel Hasil -->
-    <section id="resultSection" class="hidden glass-card rounded-2xl p-5 sm:p-6 shadow-2xl mb-7 border border-cyan-500/30">
-      <div class="flex flex-col md:flex-row gap-5 items-start mb-5">
-        <div class="w-full md:w-64 shrink-0">
-          <div class="relative rounded-xl overflow-hidden bg-slate-900 border border-slate-800 aspect-video flex items-center justify-center">
-            <img id="previewThumb" src="" alt="Thumbnail" class="w-full h-full object-cover hidden" />
-            <div id="thumbPlaceholder" class="text-slate-500 flex flex-col items-center gap-2">
-              <i class="fa-solid fa-photo-film text-3xl"></i>
-              <span class="text-xs">Media Terdeteksi</span>
-            </div>
-            <span id="previewBadge" class="absolute top-2 left-2 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold bg-slate-950/90 text-cyan-300 border border-slate-700"></span>
-          </div>
-        </div>
-
-        <div class="flex-1 w-full">
-          <h3 id="previewTitle" class="font-bold text-base sm:text-lg text-white leading-snug mb-1">Judul Media</h3>
-          <p id="previewAuthor" class="text-xs text-slate-400 mb-4">Sumber Media</p>
-
-          <div class="flex flex-wrap gap-2.5">
-            <button id="downloadDirectBtn" type="button" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition">
-              <i class="fa-solid fa-download"></i>
-              <span>Unduh File Asli Sekarang</span>
-            </button>
-
-            <button id="downloadThumbBtn" type="button" class="hidden bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition">
-              <i class="fa-regular fa-image"></i>
-              <span>Unduh Thumbnail MaxRes HD</span>
-            </button>
-
-            <a id="openSourceBtn" href="#" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-slate-700 flex items-center gap-2 transition">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              <span>Buka Sumber Asli</span>
-            </a>
-          </div>
-
-          <!-- Progress Bar Unduhan File Langsung -->
-          <div id="progressWrap" class="hidden mt-4">
-            <div class="flex justify-between text-xs text-cyan-300 mb-1">
-              <span id="progressText">Mengunduh...</span>
-              <span id="progressPercent">0%</span>
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-              <div id="progressBar" class="bg-cyan-400 h-2 transition-all duration-150" style="width: 0%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pratinjau Pemutar Resmi / Info Kebijakan Platform -->
-      <div id="playerContainer" class="hidden mt-4 pt-4 border-t border-slate-800/80">
-        <p class="text-xs font-semibold text-slate-300 mb-2.5 flex items-center gap-2">
-          <i class="fa-solid fa-circle-play text-cyan-400"></i> Pratinjau Pemutar Resmi:
-        </p>
-        <div id="embedBox" class="w-full aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-800"></div>
-        <p class="text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 mt-3 leading-relaxed">
-          <i class="fa-solid fa-shield-halved mr-1"></i>
-          <strong>Catatan Teknis Platform:</strong> Ekstraksi langsung file video/audio dari platform streaming tertutup dibatasi oleh proteksi server dan <em>Terms of Service</em> hak cipta. Untuk mengunduh video milik Anda sendiri, gunakan <strong>YouTube Studio</strong>; untuk menguji pengunduhan langsung di SenHub, gunakan tautan file media terbuka (klik tombol <strong>Tes Sampel File Langsung</strong> di kanan atas).
-        </p>
-      </div>
-    </section>
-
-    <!-- Riwayat -->
-    <section class="glass-card rounded-2xl p-5 sm:p-6 mb-7">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-bold text-sm sm:text-base flex items-center gap-2">
-          <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
-          Riwayat Pemeriksaan Media
-        </h3>
-        <button id="clearHistoryBtn" type="button" class="text-xs text-slate-400 hover:text-rose-400 font-medium transition">
-          Hapus Semua
-        </button>
-      </div>
-      <div id="historyList" class="space-y-2.5 text-sm text-slate-400"></div>
-    </section>
-
-    <!-- Footer Edukasi kabellasensen -->
-    <footer class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-800/90">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80">
+    <!-- Footer Edukasi & Informasi Pembuat (kabellasensen) -->
+    <footer class="glass-panel rounded-3xl p-5 sm:p-7 mt-10 border border-slate-800/90">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-800/80">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
             <i class="fa-solid fa-code"></i>
           </div>
           <div>
-            <h4 class="text-sm font-bold text-white">Tentang SenHub</h4>
+            <h4 class="text-sm font-bold text-white">Tentang SenHub Studio</h4>
             <p class="text-xs text-slate-400">Dirancang & dikembangkan oleh <span class="text-cyan-400 font-semibold">kabellasensen</span></p>
           </div>
         </div>
-        <span class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-[11px] font-semibold">
-          Tujuan Edukasi & Non-Komersial
-        </span>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-[11px] font-semibold">
+            Tujuan Edukasi & Produktivitas
+          </span>
+          <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold">
+            Zero Server Upload
+          </span>
+        </div>
       </div>
 
       <div class="space-y-2 text-xs text-slate-400 leading-relaxed">
         <p>
-          <strong>Pernyataan Tujuan & Penggunaan Bijak:</strong> Website <strong>SenHub</strong> dibuat dan dikembangkan oleh <strong>kabellasensen</strong> sebagai sarana pembelajaran serta edukasi pengembangan antarmuka web modern.
+          <strong>Pernyataan Tujuan & Penggunaan Bijak:</strong> Website <strong>SenHub Studio</strong> dibuat dan dikembangkan oleh <strong>kabellasensen</strong> dengan tujuan edukasi teknologi pemrosesan media berbasis browser modern sekaligus membantu produktivitas konversi dokumen serta media sehari-hari.
         </p>
         <p>
-          Harap gunakan fitur pada halaman ini secara bijak. Pastikan Anda hanya mengunduh file media milik pribadi, aset berlisensi bebas (<em>Creative Commons</em> / domain publik), atau materi yang telah mendapatkan izin resmi dari kreatornya sesuai Ketentuan Layanan (<em>Terms of Service</em>) masing-masing platform.
+          Seluruh file diproses langsung di memori perangkat Anda tanpa dikirim ke server pihak ketiga. Harap gunakan layanan ini secara bijak untuk mengelola karya pribadi, dokumen kerja/pendidikan, atau media dengan izin resmi dari pemilik hak cipta sesuai ketentuan layanan masing-masing platform.
         </p>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+        <span>&copy; 2026 SenHub Studio — Dikembangkan oleh kabellasensen.</span>
+        <span>Kompatibel untuk Smartphone Android/iOS & Desktop PC.</span>
       </div>
     </footer>
 
   </main>
 
+  <!-- ===================================================================== -->
+  <!-- LOGIKA UTAMA JAVASCRIPT (SEMUA 4 KONVERTER AKTIF)                     -->
+  <!-- ===================================================================== -->
   <script>
-    let currentMedia = null;
+    // Konfigurasi Worker PDF.js
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
 
-    const urlInput = document.getElementById("urlInput");
-    const pasteBtn = document.getElementById("pasteBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const processBtn = document.getElementById("processBtn");
-    const sampleMediaBtn = document.getElementById("sampleMediaBtn");
-    const statusBox = document.getElementById("statusBox");
-    const resultSection = document.getElementById("resultSection");
-    const previewThumb = document.getElementById("previewThumb");
-    const thumbPlaceholder = document.getElementById("thumbPlaceholder");
-    const previewBadge = document.getElementById("previewBadge");
-    const previewTitle = document.getElementById("previewTitle");
-    const previewAuthor = document.getElementById("previewAuthor");
-    const downloadDirectBtn = document.getElementById("downloadDirectBtn");
-    const downloadThumbBtn = document.getElementById("downloadThumbBtn");
-    const openSourceBtn = document.getElementById("openSourceBtn");
-    const progressWrap = document.getElementById("progressWrap");
-    const progressBar = document.getElementById("progressBar");
-    const progressPercent = document.getElementById("progressPercent");
-    const playerContainer = document.getElementById("playerContainer");
-    const embedBox = document.getElementById("embedBox");
-    const historyList = document.getElementById("historyList");
-    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    // State Global
+    let activeBlobUrls = [];
+    let currentPdfMode = "pdf2img";
+    let currentDocMode = "doc2pdf";
+    let loadedMediaDuration = 0;
+
+    // Utilitas Umum
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return "0 B";
+      const k = 1024;
+      const sizes = ["B", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
 
     function escapeHtml(str) {
       const d = document.createElement("div");
@@ -247,291 +535,940 @@
       return d.innerHTML;
     }
 
-    function detectPlatform(url) {
-      const lower = url.toLowerCase().trim();
-      if (!lower) return null;
-      if (lower.includes("youtube.com/") || lower.includes("youtu.be/")) return "youtube";
-      if (lower.includes("tiktok.com/")) return "tiktok";
-      if (lower.includes("instagram.com/")) return "instagram";
-      if (/\.(mp4|webm|mp3|wav|flac|ogg)(\?.*)?$/i.test(lower)) return "direct";
-      return "other";
+    function getBaseName(filename) {
+      return filename.replace(/\.[^/.]+$/, "");
     }
 
-    function extractYouTubeId(url) {
-      const match = url.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-      return match ? match[1] : null;
+    function revokeOldBlobs() {
+      activeBlobUrls.forEach((u) => URL.revokeObjectURL(u));
+      activeBlobUrls = [];
     }
 
-    function highlightBadge(platform) {
-      document.querySelectorAll(".plat-badge").forEach((b) => {
-        b.className = b.dataset.plat === platform
-          ? "plat-badge px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 transition"
-          : "plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition";
-      });
-    }
+    // UI Helpers: Progress, Alert, Output Card
+    const progressSection = document.getElementById("progressSection");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressPct = document.getElementById("progressPct");
+    const progressBar = document.getElementById("progressBar");
+    const alertBox = document.getElementById("alertBox");
+    const emptyOutputState = document.getElementById("emptyOutputState");
+    const outputList = document.getElementById("outputList");
+    const engineStateBadge = document.getElementById("engineStateBadge");
+    const activityLog = document.getElementById("activityLog");
 
-    function showStatus(msg, isError = true) {
-      statusBox.className = isError
-        ? "mt-4 rounded-xl p-3.5 text-xs sm:text-sm border bg-rose-500/10 border-rose-500/30 text-rose-300"
-        : "mt-4 rounded-xl p-3.5 text-xs sm:text-sm border bg-cyan-500/10 border-cyan-500/30 text-cyan-200";
-      statusBox.textContent = msg;
-    }
-
-    async function analyzeMedia() {
-      const raw = urlInput.value.trim();
-      statusBox.classList.add("hidden");
-      progressWrap.classList.add("hidden");
-
-      if (!raw) {
-        showStatus("Silakan tempel tautan media terlebih dahulu.");
-        return;
+    function setProgress(percent, text) {
+      progressSection.classList.remove("hidden");
+      const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+      progressBar.style.width = clamped + "%";
+      progressPct.textContent = clamped + "%";
+      if (text) {
+        progressLabel.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${escapeHtml(text)}`;
       }
-
-      let parsed;
-      try {
-        parsed = new URL(raw);
-      } catch {
-        showStatus("Format URL tidak valid. Pastikan diawali https://");
-        return;
-      }
-
-      const platform = detectPlatform(parsed.href);
-      highlightBadge(platform);
-
-      let cleanUrl = parsed.href;
-      const ytId = platform === "youtube" ? extractYouTubeId(parsed.href) : null;
-      if (ytId) cleanUrl = `https://www.youtube.com/watch?v=${ytId}`;
-
-      processBtn.disabled = true;
-      processBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Memuat...</span>';
-
-      const meta = {
-        url: cleanUrl,
-        platform: platform.toUpperCase(),
-        ytId,
-        title: "Media " + platform.toUpperCase(),
-        author: parsed.hostname,
-        thumbnail: ""
-      };
-
-      try {
-        if (platform === "youtube" && ytId) {
-          meta.thumbnail = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
-          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(cleanUrl)}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.title) meta.title = data.title;
-            if (data.author_name) meta.author = "Channel: " + data.author_name;
-          }
-        } else if (platform === "tiktok") {
-          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(cleanUrl)}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.title) meta.title = data.title;
-            if (data.author_name) meta.author = "TikTok: @" + data.author_name;
-            if (data.thumbnail_url) meta.thumbnail = data.thumbnail_url;
-          }
-        } else if (platform === "direct") {
-          meta.title = decodeURIComponent(parsed.pathname.split("/").pop() || "File Media Langsung");
-          meta.author = "Direct Host: " + parsed.hostname;
-        }
-      } catch {
-        // Abaikan jika metadata gagal dimuat
-      }
-
-      currentMedia = meta;
-      renderResult(meta);
-      saveHistory(meta);
-
-      processBtn.disabled = false;
-      processBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i><span>Analisis Media</span>';
+      engineStateBadge.textContent = clamped >= 100 ? "Selesai" : "Memproses...";
+      engineStateBadge.className = clamped >= 100
+        ? "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold"
+        : "text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold";
     }
 
-    function renderResult(meta) {
-      resultSection.classList.remove("hidden");
-      previewBadge.textContent = meta.platform;
-      previewTitle.textContent = meta.title;
-      previewAuthor.textContent = meta.author;
-      openSourceBtn.href = meta.url;
+    function hideProgress() {
+      progressSection.classList.add("hidden");
+    }
 
-      if (meta.thumbnail) {
-        previewThumb.src = meta.thumbnail;
-        previewThumb.classList.remove("hidden");
-        thumbPlaceholder.classList.add("hidden");
-        downloadThumbBtn.classList.remove("hidden");
+    function showAlert(msg, type = "error") {
+      alertBox.classList.remove("hidden", "bg-rose-500/10", "border-rose-500/30", "text-rose-300", "bg-emerald-500/10", "border-emerald-500/30", "text-emerald-300");
+      if (type === "error") {
+        alertBox.classList.add("bg-rose-500/10", "border-rose-500/30", "text-rose-300");
+        engineStateBadge.textContent = "Terhenti";
       } else {
-        previewThumb.classList.add("hidden");
-        thumbPlaceholder.classList.remove("hidden");
-        downloadThumbBtn.classList.add("hidden");
+        alertBox.classList.add("bg-emerald-500/10", "border-emerald-500/30", "text-emerald-300");
       }
-
-      if (meta.platform === "DIRECT") {
-        downloadDirectBtn.classList.remove("hidden");
-        playerContainer.classList.remove("hidden");
-        const isAudio = /\.(mp3|wav|flac|ogg)(\?.*)?$/i.test(meta.url);
-        embedBox.innerHTML = isAudio
-          ? `<div class="h-full flex items-center justify-center p-6"><audio controls src="${escapeHtml(meta.url)}" class="w-full"></audio></div>`
-          : `<video controls src="${escapeHtml(meta.url)}" class="w-full h-full object-contain"></video>`;
-      } else if (meta.ytId) {
-        downloadDirectBtn.classList.add("hidden");
-        playerContainer.classList.remove("hidden");
-        embedBox.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(meta.ytId)}" class="w-full h-full border-0" allowfullscreen></iframe>`;
-      } else {
-        downloadDirectBtn.classList.add("hidden");
-        playerContainer.classList.add("hidden");
-        embedBox.innerHTML = "";
-      }
+      alertBox.textContent = msg;
     }
 
-    // Unduh file media langsung dengan indikator persentase nyata
-    async function downloadDirectFile() {
-      if (!currentMedia) return;
-      progressWrap.classList.remove("hidden");
-      progressBar.style.width = "0%";
-      progressPercent.textContent = "0%";
-
-      try {
-        const response = await fetch(currentMedia.url);
-        if (!response.ok) throw new Error("Gagal mengambil file");
-
-        const total = parseInt(response.headers.get("content-length") || "0", 10);
-        const reader = response.body.getReader();
-        const chunks = [];
-        let received = 0;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          chunks.push(value);
-          received += value.length;
-          if (total > 0) {
-            const pct = Math.round((received / total) * 100);
-            progressBar.style.width = pct + "%";
-            progressPercent.textContent = pct + "%";
-          }
-        }
-
-        const blob = new Blob(chunks);
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = currentMedia.title || "senhub-media";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(blobUrl);
-        progressBar.style.width = "100%";
-        progressPercent.textContent = "Selesai!";
-      } catch {
-        // Fallback jika server file membatasi CORS namun mengizinkan tautan langsung
-        window.open(currentMedia.url, "_blank", "noopener,noreferrer");
-        progressWrap.classList.add("hidden");
-      }
+    function clearAlert() {
+      alertBox.classList.add("hidden");
     }
 
-    // Unduh Thumbnail HD langsung ke perangkat
-    async function downloadThumbnail() {
-      if (!currentMedia?.thumbnail) return;
-      try {
-        const res = await fetch(currentMedia.thumbnail);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `senhub-thumb-${currentMedia.ytId || "hd"}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      } catch {
-        window.open(currentMedia.thumbnail, "_blank", "noopener,noreferrer");
-      }
+    function clearOutputCards() {
+      revokeOldBlobs();
+      outputList.innerHTML = "";
+      outputList.classList.add("hidden");
+      emptyOutputState.classList.remove("hidden");
     }
 
-    function getHistory() {
-      try {
-        return JSON.parse(localStorage.getItem("senhub_v21_history") || "[]");
-      } catch {
-        return [];
-      }
-    }
+    function addOutputCard({ blob, filename, subtitle, previewType }) {
+      emptyOutputState.classList.add("hidden");
+      outputList.classList.remove("hidden");
 
-    function saveHistory(meta) {
-      const list = getHistory().filter((i) => i.url !== meta.url);
-      list.unshift({ url: meta.url, title: meta.title, platform: meta.platform });
-      localStorage.setItem("senhub_v21_history", JSON.stringify(list.slice(0, 6)));
-      renderHistory();
-    }
+      const url = URL.createObjectURL(blob);
+      activeBlobUrls.push(url);
 
-    function renderHistory() {
-      const list = getHistory();
-      if (!list.length) {
-        historyList.innerHTML = '<p class="text-xs text-slate-500 italic">Belum ada riwayat di SenHub.</p>';
-        return;
+      let previewHtml = "";
+      if (previewType === "audio") {
+        previewHtml = `<audio controls src="${url}" class="w-full mt-3 h-10"></audio>`;
+      } else if (previewType === "video") {
+        previewHtml = `<video controls src="${url}" class="w-full mt-3 rounded-xl max-h-48 bg-black"></video>`;
+      } else if (previewType === "image") {
+        previewHtml = `<img src="${url}" alt="Preview" class="w-full mt-3 rounded-xl max-h-48 object-contain bg-slate-950/70 border border-slate-800 p-1" />`;
       }
-      historyList.innerHTML = list.map((item) => `
-        <div class="flex items-center justify-between gap-2 bg-slate-900/75 border border-slate-800 rounded-xl p-3">
+
+      const card = document.createElement("div");
+      card.className = "bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-lg";
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-cyan-300 mr-1.5">${escapeHtml(item.platform)}</span>
-            <span class="text-xs font-semibold text-slate-200 truncate">${escapeHtml(item.title)}</span>
+            <p class="text-xs sm:text-sm font-bold text-white truncate" title="${escapeHtml(filename)}">${escapeHtml(filename)}</p>
+            <p class="text-[11px] text-cyan-300 mt-0.5">${escapeHtml(subtitle)} • ${formatBytes(blob.size)}</p>
           </div>
-          <button type="button" data-url="${escapeHtml(item.url)}" class="reload-item shrink-0 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg border border-slate-700">
-            Muat
-          </button>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[10px] font-bold shrink-0">SIAP</span>
         </div>
-      `).join("");
+        ${previewHtml}
+        <a href="${url}" download="${escapeHtml(filename)}" class="mt-3.5 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md shadow-emerald-500/15">
+          <i class="fa-solid fa-download"></i>
+          <span>Download File (${formatBytes(blob.size)})</span>
+        </a>
+      `;
+      outputList.prepend(card);
+      addLogItem(filename, subtitle);
+    }
 
-      document.querySelectorAll(".reload-item").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          urlInput.value = btn.dataset.url;
-          clearBtn.classList.remove("hidden");
-          analyzeMedia();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+    function addLogItem(name, detail) {
+      const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+      if (activityLog.querySelector("p.italic")) activityLog.innerHTML = "";
+      const row = document.createElement("div");
+      row.className = "flex items-center justify-between gap-2 bg-slate-900/70 border border-slate-800/80 rounded-xl px-3 py-2";
+      row.innerHTML = `
+        <span class="truncate font-medium text-slate-200">${escapeHtml(name)}</span>
+        <span class="text-[10px] text-cyan-300 shrink-0">${escapeHtml(detail)} • ${time}</span>
+      `;
+      activityLog.prepend(row);
+    }
+
+    // =====================================================================
+    // NAVIGASI TAB MODUL & DRAG-DROP HELPER
+    // =====================================================================
+    document.querySelectorAll(".module-tab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".module-tab").forEach((b) => b.classList.remove("nav-pill-active"));
+        btn.classList.add("nav-pill-active");
+
+        const target = btn.dataset.module;
+        document.querySelectorAll(".module-panel").forEach((p) => p.classList.add("hidden"));
+        document.getElementById("panel-" + target).classList.remove("hidden");
+        clearAlert();
+      });
+    });
+
+    function bindDropzone(zoneId, inputId, onFilesSelected) {
+      const zone = document.getElementById(zoneId);
+      const input = document.getElementById(inputId);
+
+      ["dragenter", "dragover"].forEach((evt) => {
+        zone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add("drop-active");
         });
       });
+      ["dragleave", "drop"].forEach((evt) => {
+        zone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove("drop-active");
+        });
+      });
+      zone.addEventListener("drop", (e) => {
+        if (e.dataTransfer.files?.length) {
+          input.files = e.dataTransfer.files;
+          onFilesSelected(e.dataTransfer.files);
+        }
+      });
+      input.addEventListener("change", () => {
+        if (input.files?.length) onFilesSelected(input.files);
+      });
     }
 
-    urlInput.addEventListener("input", () => {
-      const val = urlInput.value.trim();
-      clearBtn.classList.toggle("hidden", !val);
-      highlightBadge(detectPlatform(val));
+    // =====================================================================
+    // MODUL 1: VIDEO & HI-RES AUDIO CONVERTER (WAV 24-bit, 16-bit, MP3, WebM)
+    // =====================================================================
+    const mediaInput = document.getElementById("mediaInput");
+    const mediaFileBadge = document.getElementById("mediaFileBadge");
+    const mediaGain = document.getElementById("mediaGain");
+    const gainLabel = document.getElementById("gainLabel");
+    const mediaDurationInfo = document.getElementById("mediaDurationInfo");
+    const trimStart = document.getElementById("trimStart");
+    const trimEnd = document.getElementById("trimEnd");
+
+    mediaGain.addEventListener("input", () => {
+      gainLabel.textContent = mediaGain.value + "%";
     });
 
-    pasteBtn.addEventListener("click", async () => {
-      try {
-        const text = await navigator.clipboard.readText();
-        if (text) {
-          urlInput.value = text.trim();
-          clearBtn.classList.remove("hidden");
-          highlightBadge(detectPlatform(text));
+    bindDropzone("mediaDropzone", "mediaInput", (files) => {
+      const file = files[0];
+      mediaFileBadge.textContent = `${file.name} (${formatBytes(file.size)})`;
+      mediaFileBadge.classList.remove("hidden");
+
+      // Cek durasi media menggunakan elemen sementara
+      const tempUrl = URL.createObjectURL(file);
+      const tempMedia = document.createElement(file.type.startsWith("audio") ? "audio" : "video");
+      tempMedia.preload = "metadata";
+      tempMedia.onloadedmetadata = () => {
+        loadedMediaDuration = tempMedia.duration || 0;
+        mediaDurationInfo.textContent = loadedMediaDuration
+          ? `Durasi asli: ${loadedMediaDuration.toFixed(1)} detik`
+          : "Durasi asli: Terdeteksi";
+        trimEnd.value = "0";
+        URL.revokeObjectURL(tempUrl);
+      };
+      tempMedia.onerror = () => URL.revokeObjectURL(tempUrl);
+      tempMedia.src = tempUrl;
+    });
+
+    // Encoder AudioBuffer -> WAV (16-bit atau 24-bit Hi-Res PCM)
+    function encodeWavFromBuffer(audioBuffer, bitDepth, gainMultiplier) {
+      const numChannels = audioBuffer.numberOfChannels;
+      const sampleRate = audioBuffer.sampleRate;
+      const bytesPerSample = bitDepth / 8;
+      const blockAlign = numChannels * bytesPerSample;
+      const samples = audioBuffer.length;
+      const dataSize = samples * blockAlign;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
+
+      function writeStr(offset, str) {
+        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+      }
+
+      writeStr(0, "RIFF");
+      view.setUint32(4, 36 + dataSize, true);
+      writeStr(8, "WAVE");
+      writeStr(12, "fmt ");
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true); // PCM
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitDepth, true);
+      writeStr(36, "data");
+      view.setUint32(40, dataSize, true);
+
+      const channels = [];
+      for (let c = 0; c < numChannels; c++) channels.push(audioBuffer.getChannelData(c));
+
+      let offset = 44;
+      for (let i = 0; i < samples; i++) {
+        for (let c = 0; c < numChannels; c++) {
+          let s = Math.max(-1, Math.min(1, channels[c][i] * gainMultiplier));
+          if (bitDepth === 24) {
+            const val = s < 0 ? s * 0x800000 : s * 0x7fffff;
+            const intVal = Math.round(val);
+            view.setUint8(offset, intVal & 0xff);
+            view.setUint8(offset + 1, (intVal >> 8) & 0xff);
+            view.setUint8(offset + 2, (intVal >> 16) & 0xff);
+            offset += 3;
+          } else {
+            view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            offset += 2;
+          }
         }
-      } catch {
-        showStatus("Silakan tempel manual menggunakan Ctrl+V atau tahan layar.");
+      }
+      return new Blob([buffer], { type: "audio/wav" });
+    }
+
+    // Encoder AudioBuffer -> MP3 via lamejs
+    async function encodeMp3FromBuffer(audioBuffer, kbps, gainMultiplier, onProg) {
+      if (!window.lamejs) throw new Error("Pustaka MP3 encoder belum termuat. Periksa koneksi internet Anda.");
+      const numChannels = Math.min(2, audioBuffer.numberOfChannels);
+      const sampleRate = audioBuffer.sampleRate;
+      const mp3encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, kbps);
+      const mp3Data = [];
+
+      const leftRaw = audioBuffer.getChannelData(0);
+      const rightRaw = numChannels > 1 ? audioBuffer.getChannelData(1) : leftRaw;
+      const length = leftRaw.length;
+      const blockSize = 1152 * 32;
+
+      for (let i = 0; i < length; i += blockSize) {
+        const chunkLen = Math.min(blockSize, length - i);
+        const left = new Int16Array(chunkLen);
+        const right = new Int16Array(chunkLen);
+
+        for (let j = 0; j < chunkLen; j++) {
+          const sl = Math.max(-1, Math.min(1, leftRaw[i + j] * gainMultiplier));
+          left[j] = sl < 0 ? sl * 0x8000 : sl * 0x7fff;
+          if (numChannels > 1) {
+            const sr = Math.max(-1, Math.min(1, rightRaw[i + j] * gainMultiplier));
+            right[j] = sr < 0 ? sr * 0x8000 : sr * 0x7fff;
+          }
+        }
+
+        const mp3buf = numChannels > 1
+          ? mp3encoder.encodeBuffer(left, right)
+          : mp3encoder.encodeBuffer(left);
+        if (mp3buf.length > 0) mp3Data.push(mp3buf);
+
+        if (onProg) onProg(35 + Math.round((i / length) * 60));
+        await new Promise((r) => setTimeout(r, 0));
+      }
+
+      const endBuf = mp3encoder.flush();
+      if (endBuf.length > 0) mp3Data.push(endBuf);
+      return new Blob(mp3Data, { type: "audio/mpeg" });
+    }
+
+    // Potong AudioBuffer sesuai Trim
+    function sliceAudioBuffer(ctx, buffer, startSec, endSec) {
+      const rate = buffer.sampleRate;
+      const sFrame = Math.max(0, Math.floor(startSec * rate));
+      const eFrame = endSec > startSec
+        ? Math.min(buffer.length, Math.floor(endSec * rate))
+        : buffer.length;
+      const frameCount = Math.max(1, eFrame - sFrame);
+
+      const out = ctx.createBuffer(buffer.numberOfChannels, frameCount, rate);
+      for (let c = 0; c < buffer.numberOfChannels; c++) {
+        out.copyToChannel(buffer.getChannelData(c).subarray(sFrame, eFrame), c, 0);
+      }
+      return out;
+    }
+
+    // Kompresi Video via MediaRecorder
+    async function compressVideoWebM(file, startSec, endSec) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const video = document.createElement("video");
+        video.src = url;
+        video.muted = false;
+        video.playsInline = true;
+
+        video.onloadedmetadata = () => {
+          const targetStart = Math.max(0, startSec || 0);
+          const targetEnd = endSec > targetStart ? Math.min(video.duration, endSec) : video.duration;
+          video.currentTime = targetStart;
+
+          const stream = video.captureStream ? video.captureStream() : video.mozCaptureStream?.();
+          if (!stream) {
+            URL.revokeObjectURL(url);
+            reject(new Error("Browser ini tidak mendukung perekaman ulang stream video. Gunakan Chrome/Edge terbaru."));
+            return;
+          }
+
+          const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
+            ? "video/webm;codecs=vp9,opus"
+            : "video/webm";
+          const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 1200000 });
+          const chunks = [];
+
+          recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+          recorder.onstop = () => {
+            URL.revokeObjectURL(url);
+            resolve(new Blob(chunks, { type: "video/webm" }));
+          };
+
+          video.ontimeupdate = () => {
+            const pct = Math.min(98, Math.round(((video.currentTime - targetStart) / Math.max(1, targetEnd - targetStart)) * 100));
+            setProgress(pct, "Mengompresi stream video secara real-time...");
+            if (video.currentTime >= targetEnd) {
+              video.pause();
+              if (recorder.state === "recording") recorder.stop();
+            }
+          };
+
+          video.onended = () => {
+            if (recorder.state === "recording") recorder.stop();
+          };
+
+          recorder.start(250);
+          video.play().catch((err) => {
+            URL.revokeObjectURL(url);
+            reject(err);
+          });
+        };
+        video.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Format video tidak dapat dibaca oleh browser."));
+        };
+      });
+    }
+
+    document.getElementById("convertMediaBtn").addEventListener("click", async () => {
+      clearAlert();
+      const file = mediaInput.files?.[0];
+      if (!file) return showAlert("Pilih file video atau audio terlebih dahulu.");
+
+      const format = document.getElementById("mediaFormat").value;
+      const gain = parseInt(mediaGain.value, 10) / 100;
+      const tStart = parseFloat(trimStart.value) || 0;
+      const tEnd = parseFloat(trimEnd.value) || 0;
+      const base = getBaseName(file.name);
+
+      clearOutputCards();
+
+      try {
+        if (format === "webm_video") {
+          setProgress(5, "Menyiapkan kompresi video WebM...");
+          const videoBlob = await compressVideoWebM(file, tStart, tEnd);
+          setProgress(100, "Selesai!");
+          addOutputCard({
+            blob: videoBlob,
+            filename: `${base}-compressed.webm`,
+            subtitle: "WebM Compressed Video",
+            previewType: "video"
+          });
+          return;
+        }
+
+        setProgress(12, "Membaca & mendekode jalur audio resolusi tinggi...");
+        const arrayBuf = await file.arrayBuffer();
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioCtx();
+        const decoded = await audioCtx.decodeAudioData(arrayBuf);
+        const sliced = sliceAudioBuffer(audioCtx, decoded, tStart, tEnd);
+
+        let outBlob, ext, label;
+        if (format === "wav24") {
+          setProgress(65, "Merakit PCM 24-bit Lossless WAV...");
+          outBlob = encodeWavFromBuffer(sliced, 24, gain);
+          ext = "wav";
+          label = "Hi-Res WAV 24-bit PCM";
+        } else if (format === "wav16") {
+          setProgress(65, "Merakit PCM 16-bit WAV...");
+          outBlob = encodeWavFromBuffer(sliced, 16, gain);
+          ext = "wav";
+          label = "CD Quality WAV 16-bit";
+        } else {
+          const kbps = format === "mp3_320" ? 320 : 192;
+          setProgress(35, `Mengenkode MP3 ${kbps} kbps...`);
+          outBlob = await encodeMp3FromBuffer(sliced, kbps, gain, (p) => setProgress(p, `Mengenkode MP3 ${kbps} kbps...`));
+          ext = "mp3";
+          label = `MP3 Audio ${kbps} kbps`;
+        }
+
+        await audioCtx.close();
+        setProgress(100, "Konversi Audio Selesai!");
+        addOutputCard({
+          blob: outBlob,
+          filename: `${base}-senhub.${ext}`,
+          subtitle: label,
+          previewType: "audio"
+        });
+      } catch (err) {
+        hideProgress();
+        showAlert("Gagal memproses media: " + (err.message || "Pastikan file memiliki jalur suara yang valid dan ukuran tidak melebihi RAM browser."));
       }
     });
 
-    clearBtn.addEventListener("click", () => {
-      urlInput.value = "";
-      clearBtn.classList.add("hidden");
-      highlightBadge(null);
+    // =====================================================================
+    // MODUL 2: IMAGE CONVERTER STUDIO (Batch JPG/PNG/WebP + HEIC + ZIP)
+    // =====================================================================
+    const imageInput = document.getElementById("imageInput");
+    const imageCountBadge = document.getElementById("imageCountBadge");
+    const imgQuality = document.getElementById("imgQuality");
+    const imgQualityVal = document.getElementById("imgQualityVal");
+
+    imgQuality.addEventListener("input", () => {
+      imgQualityVal.textContent = imgQuality.value + "%";
     });
 
-    // Tombol sampel video Creative Commons (Wikimedia) agar fitur unduh langsung bisa langsung diuji
-    sampleMediaBtn.addEventListener("click", () => {
-      urlInput.value = "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm";
-      clearBtn.classList.remove("hidden");
-      analyzeMedia();
+    bindDropzone("imageDropzone", "imageInput", (files) => {
+      imageCountBadge.textContent = `${files.length} gambar dipilih`;
+      imageCountBadge.classList.remove("hidden");
     });
 
-    processBtn.addEventListener("click", analyzeMedia);
-    downloadDirectBtn.addEventListener("click", downloadDirectFile);
-    downloadThumbBtn.addEventListener("click", downloadThumbnail);
-    clearHistoryBtn.addEventListener("click", () => {
-      localStorage.removeItem("senhub_v21_history");
-      renderHistory();
+    async function loadSingleImageBitmap(file) {
+      let sourceBlob = file;
+      const lower = file.name.toLowerCase();
+      if ((lower.endsWith(".heic") || lower.endsWith(".heif")) && window.heic2any) {
+        const converted = await window.heic2any({ blob: file, toType: "image/png" });
+        sourceBlob = Array.isArray(converted) ? converted[0] : converted;
+      }
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(sourceBlob);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          resolve(img);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Gagal membuka gambar " + file.name));
+        };
+        img.src = url;
+      });
+    }
+
+    document.getElementById("convertImageBtn").addEventListener("click", async () => {
+      clearAlert();
+      const files = Array.from(imageInput.files || []);
+      if (!files.length) return showAlert("Pilih minimal satu gambar terlebih dahulu.");
+
+      const mime = document.getElementById("imgFormat").value;
+      const quality = parseInt(imgQuality.value, 10) / 100;
+      const maxW = parseInt(document.getElementById("imgMaxWidth").value, 10) || 0;
+      const extMap = { "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" };
+      const ext = extMap[mime];
+
+      clearOutputCards();
+
+      try {
+        const results = [];
+        for (let i = 0; i < files.length; i++) {
+          setProgress(((i) / files.length) * 90 + 5, `Mengonversi gambar ${i + 1} dari ${files.length}...`);
+          const img = await loadSingleImageBitmap(files[i]);
+
+          let w = img.naturalWidth;
+          let h = img.naturalHeight;
+          if (maxW > 0 && w > maxW) {
+            h = Math.round((h * maxW) / w);
+            w = maxW;
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+
+          if (mime === "image/jpeg") {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, w, h);
+          }
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const blob = await new Promise((res) => canvas.toBlob(res, mime, quality));
+          const outName = `${getBaseName(files[i].name)}.${ext}`;
+          results.push({ blob, outName, w, h });
+        }
+
+        // Jika lebih dari 2 gambar, sertakan bundel ZIP di paling atas
+        if (results.length > 1 && window.JSZip) {
+          setProgress(95, "Membungkus bundel ZIP...");
+          const zip = new JSZip();
+          results.forEach((r) => zip.file(r.outName, r.blob));
+          const zipBlob = await zip.generateAsync({ type: "blob" });
+          addOutputCard({
+            blob: zipBlob,
+            filename: `senhub-images-${results.length}files.zip`,
+            subtitle: `Bundel ZIP (${results.length} Gambar ${ext.toUpperCase()})`,
+            previewType: "none"
+          });
+        }
+
+        results.slice(0, 6).forEach((r) => {
+          addOutputCard({
+            blob: r.blob,
+            filename: r.outName,
+            subtitle: `${ext.toUpperCase()} (${r.w}×${r.h} px)`,
+            previewType: "image"
+          });
+        });
+
+        setProgress(100, "Selesai!");
+      } catch (err) {
+        hideProgress();
+        showAlert("Gagal mengonversi gambar: " + err.message);
+      }
     });
 
-    renderHistory();
+    // =====================================================================
+    // MODUL 3: PDF CONVERTER (PDF->Image, Image->PDF, Merge PDF)
+    // =====================================================================
+    const pdfInput = document.getElementById("pdfInput");
+    const pdfDropTitle = document.getElementById("pdfDropTitle");
+    const pdfDropDesc = document.getElementById("pdfDropDesc");
+    const pdfFileBadge = document.getElementById("pdfFileBadge");
+    const pdf2imgOptions = document.getElementById("pdf2imgOptions");
+    const img2pdfOptions = document.getElementById("img2pdfOptions");
+
+    document.querySelectorAll(".pdf-subtab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".pdf-subtab").forEach((b) => {
+          b.classList.remove("subtab-active");
+          b.classList.add("text-slate-400");
+        });
+        btn.classList.add("subtab-active");
+        btn.classList.remove("text-slate-400");
+
+        currentPdfMode = btn.dataset.pdfmode;
+        pdfInput.value = "";
+        pdfFileBadge.classList.add("hidden");
+        clearAlert();
+
+        if (currentPdfMode === "pdf2img") {
+          pdfInput.accept = ".pdf";
+          pdfInput.multiple = false;
+          pdfDropTitle.textContent = "Pilih File PDF untuk Diubah ke Gambar HD";
+          pdfDropDesc.textContent = "Setiap halaman PDF akan dirender tajam menjadi PNG / JPG";
+          pdf2imgOptions.classList.remove("hidden");
+          img2pdfOptions.classList.add("hidden");
+        } else if (currentPdfMode === "img2pdf") {
+          pdfInput.accept = "image/*,.heic";
+          pdfInput.multiple = true;
+          pdfDropTitle.textContent = "Pilih Satu atau Beberapa Foto untuk Dijadikan PDF";
+          pdfDropDesc.textContent = "Urutan halaman mengikuti urutan foto yang Anda pilih";
+          pdf2imgOptions.classList.add("hidden");
+          img2pdfOptions.classList.remove("hidden");
+        } else {
+          pdfInput.accept = ".pdf";
+          pdfInput.multiple = true;
+          pdfDropTitle.textContent = "Pilih Minimal 2 File PDF untuk Digabungkan";
+          pdfDropDesc.textContent = "Seluruh halaman PDF akan disatukan menjadi satu dokumen utuh";
+          pdf2imgOptions.classList.add("hidden");
+          img2pdfOptions.classList.add("hidden");
+        }
+      });
+    });
+
+    bindDropzone("pdfDropzone", "pdfInput", (files) => {
+      pdfFileBadge.textContent = files.length === 1
+        ? `${files[0].name} (${formatBytes(files[0].size)})`
+        : `${files.length} file dipilih`;
+      pdfFileBadge.classList.remove("hidden");
+    });
+
+    document.getElementById("convertPdfBtn").addEventListener("click", async () => {
+      clearAlert();
+      const files = Array.from(pdfInput.files || []);
+      if (!files.length) return showAlert("Pilih file terlebih dahulu sesuai mode PDF yang aktif.");
+
+      clearOutputCards();
+
+      try {
+        if (currentPdfMode === "pdf2img") {
+          const file = files[0];
+          const fmt = document.getElementById("pdfImgFormat").value;
+          const scale = parseFloat(document.getElementById("pdfScale").value) || 2;
+          const mime = fmt === "png" ? "image/png" : "image/jpeg";
+          const ext = fmt === "png" ? "png" : "jpg";
+
+          setProgress(10, "Membaca struktur halaman PDF...");
+          const data = new Uint8Array(await file.arrayBuffer());
+          const pdf = await pdfjsLib.getDocument({ data }).promise;
+          const total = pdf.numPages;
+          const renderedPages = [];
+
+          for (let pageNum = 1; pageNum <= total; pageNum++) {
+            setProgress(Math.round((pageNum / total) * 85) + 10, `Merender halaman ${pageNum} dari ${total}...`);
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale });
+            const canvas = document.createElement("canvas");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext("2d");
+
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            const blob = await new Promise((res) => canvas.toBlob(res, mime, 0.92));
+            renderedPages.push({
+              blob,
+              name: `${getBaseName(file.name)}-hal-${pageNum}.${ext}`
+            });
+          }
+
+          if (renderedPages.length > 1 && window.JSZip) {
+            const zip = new JSZip();
+            renderedPages.forEach((p) => zip.file(p.name, p.blob));
+            const zipBlob = await zip.generateAsync({ type: "blob" });
+            addOutputCard({
+              blob: zipBlob,
+              filename: `${getBaseName(file.name)}-semua-halaman.zip`,
+              subtitle: `ZIP Lengkap (${total} Halaman ${ext.toUpperCase()})`,
+              previewType: "none"
+            });
+          }
+
+          renderedPages.slice(0, 5).forEach((p, idx) => {
+            addOutputCard({
+              blob: p.blob,
+              filename: p.name,
+              subtitle: `Halaman ${idx + 1} (${ext.toUpperCase()})`,
+              previewType: "image"
+            });
+          });
+          setProgress(100, "Selesai!");
+
+        } else if (currentPdfMode === "img2pdf") {
+          const { jsPDF } = window.jspdf;
+          const orientation = document.getElementById("pdfOrientation").value;
+          const margin = parseInt(document.getElementById("pdfMargin").value, 10) || 0;
+          const doc = new jsPDF({ orientation, unit: "mm", format: "a4" });
+
+          const pageW = doc.internal.pageSize.getWidth();
+          const pageH = doc.internal.pageSize.getHeight();
+
+          for (let i = 0; i < files.length; i++) {
+            setProgress(Math.round(((i + 1) / files.length) * 90), `Menyusun foto ${i + 1} dari ${files.length}...`);
+            const img = await loadSingleImageBitmap(files[i]);
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+
+            if (i > 0) doc.addPage();
+            const availW = pageW - margin * 2;
+            const availH = pageH - margin * 2;
+            const ratio = Math.min(availW / img.naturalWidth, availH / img.naturalHeight);
+            const drawW = img.naturalWidth * ratio;
+            const drawH = img.naturalHeight * ratio;
+            const x = (pageW - drawW) / 2;
+            const y = (pageH - drawH) / 2;
+
+            doc.addImage(dataUrl, "JPEG", x, y, drawW, drawH);
+          }
+
+          const pdfBlob = doc.output("blob");
+          setProgress(100, "PDF Siap!");
+          addOutputCard({
+            blob: pdfBlob,
+            filename: `senhub-dokumen-${files.length}foto.pdf`,
+            subtitle: `PDF A4 (${files.length} Halaman)`,
+            previewType: "none"
+          });
+
+        } else {
+          if (files.length < 2) return showAlert("Pilih minimal 2 file PDF untuk digabungkan.");
+          const mergedPdf = await PDFLib.PDFDocument.create();
+
+          for (let i = 0; i < files.length; i++) {
+            setProgress(Math.round(((i + 1) / files.length) * 90), `Menggabungkan file ${i + 1} dari ${files.length}...`);
+            const bytes = await files[i].arrayBuffer();
+            const srcDoc = await PDFLib.PDFDocument.load(bytes);
+            const copiedPages = await mergedPdf.copyPages(srcDoc, srcDoc.getPageIndices());
+            copiedPages.forEach((p) => mergedPdf.addPage(p));
+          }
+
+          const mergedBytes = await mergedPdf.save();
+          const outBlob = new Blob([mergedBytes], { type: "application/pdf" });
+          setProgress(100, "Penggabungan PDF Selesai!");
+          addOutputCard({
+            blob: outBlob,
+            filename: `senhub-merged-${files.length}files.pdf`,
+            subtitle: `Gabungan ${files.length} Dokumen PDF`,
+            previewType: "none"
+          });
+        }
+      } catch (err) {
+        hideProgress();
+        showAlert("Gagal memproses PDF: " + err.message);
+      }
+    });
+
+    // =====================================================================
+    // MODUL 4: DOKUMEN ⇄ PDF (Word/Excel/TXT -> PDF & PDF -> Word/TXT)
+    // =====================================================================
+    const docInput = document.getElementById("docInput");
+    const docDropTitle = document.getElementById("docDropTitle");
+    const docDropDesc = document.getElementById("docDropDesc");
+    const docFileBadge = document.getElementById("docFileBadge");
+    const pdf2docOptions = document.getElementById("pdf2docOptions");
+    const hiddenDocRender = document.getElementById("hiddenDocRender");
+
+    document.querySelectorAll(".doc-subtab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".doc-subtab").forEach((b) => {
+          b.classList.remove("subtab-active");
+          b.classList.add("text-slate-400");
+        });
+        btn.classList.add("subtab-active");
+        btn.classList.remove("text-slate-400");
+
+        currentDocMode = btn.dataset.docmode;
+        docInput.value = "";
+        docFileBadge.classList.add("hidden");
+        clearAlert();
+
+        if (currentDocMode === "doc2pdf") {
+          docInput.accept = ".docx,.xlsx,.xls,.csv,.txt,.md";
+          docDropTitle.textContent = "Pilih File Word (.docx), Excel (.xlsx), CSV, atau TXT";
+          docDropDesc.textContent = "Isi dokumen akan diformat rapi menjadi halaman PDF A4 siap cetak";
+          pdf2docOptions.classList.add("hidden");
+        } else {
+          docInput.accept = ".pdf";
+          docDropTitle.textContent = "Pilih File PDF untuk Diekstrak ke Word (.docx) / TXT";
+          docDropDesc.textContent = "Teks dan paragraf dari halaman PDF akan disusun ulang menjadi dokumen Word";
+          pdf2docOptions.classList.remove("hidden");
+        }
+      });
+    });
+
+    bindDropzone("docDropzone", "docInput", (files) => {
+      const f = files[0];
+      docFileBadge.textContent = `${f.name} (${formatBytes(f.size)})`;
+      docFileBadge.classList.remove("hidden");
+    });
+
+    document.getElementById("convertDocBtn").addEventListener("click", async () => {
+      clearAlert();
+      const file = docInput.files?.[0];
+      if (!file) return showAlert("Pilih file dokumen terlebih dahulu.");
+
+      clearOutputCards();
+      const base = getBaseName(file.name);
+      const lower = file.name.toLowerCase();
+
+      try {
+        if (currentDocMode === "doc2pdf") {
+          setProgress(20, "Membaca isi dokumen...");
+          let htmlContent = "";
+
+          if (lower.endsWith(".docx")) {
+            const arrayBuffer = await file.arrayBuffer();
+            const res = await mammoth.convertToHtml({ arrayBuffer });
+            htmlContent = `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">${res.value}</div>`;
+          } else if (lower.endsWith(".xlsx") || lower.endsWith(".xls") || lower.endsWith(".csv")) {
+            const arrayBuffer = await file.arrayBuffer();
+            const wb = XLSX.read(arrayBuffer, { type: "array" });
+            const firstSheet = wb.Sheets[wb.SheetNames[0]];
+            const tableHtml = XLSX.utils.sheet_to_html(firstSheet);
+            htmlContent = `
+              <style>
+                table { border-collapse: collapse; width: 100%; font-size: 11px; }
+                td, th { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; }
+                tr:nth-child(even) { background: #f8fafc; }
+              </style>
+              <h2 style="font-size:16px; margin-bottom:10px; font-weight:bold;">${escapeHtml(wb.SheetNames[0])}</h2>
+              ${tableHtml}
+            `;
+          } else {
+            const text = await file.text();
+            htmlContent = `<pre style="white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #111827;">${escapeHtml(text)}</pre>`;
+          }
+
+          hiddenDocRender.innerHTML = htmlContent;
+          setProgress(65, "Mencetak tata letak halaman PDF A4...");
+
+          const opt = {
+            margin: 12,
+            filename: `${base}.pdf`,
+            image: { type: "jpeg", quality: 0.95 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+          };
+
+          const pdfBlob = await html2pdf().set(opt).from(hiddenDocRender).outputPdf("blob");
+          hiddenDocRender.innerHTML = "";
+
+          setProgress(100, "Konversi ke PDF Selesai!");
+          addOutputCard({
+            blob: pdfBlob,
+            filename: `${base}-senhub.pdf`,
+            subtitle: "Dokumen PDF A4",
+            previewType: "none"
+          });
+
+        } else {
+          // PDF -> Word (.docx) atau .txt
+          const outFmt = document.getElementById("pdfOutDocFormat").value;
+          setProgress(15, "Membaca halaman PDF...");
+
+          const data = new Uint8Array(await file.arrayBuffer());
+          const pdf = await pdfjsLib.getDocument({ data }).promise;
+          const total = pdf.numPages;
+          const extractedPages = [];
+
+          for (let p = 1; p <= total; p++) {
+            setProgress(15 + Math.round((p / total) * 65), `Mengekstrak teks halaman ${p} dari ${total}...`);
+            const page = await pdf.getPage(p);
+            const content = await page.getTextContent();
+            const lines = [];
+            let lastY = null;
+            let currentLine = "";
+
+            content.items.forEach((item) => {
+              const y = Math.round(item.transform[5]);
+              if (lastY !== null && Math.abs(y - lastY) > 6) {
+                if (currentLine.trim()) lines.push(currentLine.trim());
+                currentLine = item.str;
+              } else {
+                currentLine += (currentLine && !currentLine.endsWith(" ") ? " " : "") + item.str;
+              }
+              lastY = y;
+            });
+            if (currentLine.trim()) lines.push(currentLine.trim());
+            extractedPages.push({ pageNumber: p, lines });
+          }
+
+          const totalChars = extractedPages.reduce((acc, p) => acc + p.lines.join("").length, 0);
+          if (totalChars === 0) {
+            hideProgress();
+            return showAlert("PDF ini berisi gambar hasil scan tanpa lapisan teks digital. Gunakan menu 'PDF ke Gambar' pada tab PDF Converter.");
+          }
+
+          if (outFmt === "txt") {
+            const fullText = extractedPages
+              .map((p) => `=== Halaman ${p.pageNumber} ===\n` + p.lines.join("\n"))
+              .join("\n\n");
+            const txtBlob = new Blob([fullText], { type: "text/plain;charset=utf-8" });
+            setProgress(100, "Ekstraksi Teks Selesai!");
+            addOutputCard({
+              blob: txtBlob,
+              filename: `${base}-extracted.txt`,
+              subtitle: `Teks Bersih (${total} Halaman)`,
+              previewType: "none"
+            });
+          } else {
+            setProgress(88, "Merakit dokumen Microsoft Word (.docx)...");
+            const { Document, Packer, Paragraph, TextRun, HeadingLevel } = window.docx;
+            const docChildren = [];
+
+            extractedPages.forEach((p, idx) => {
+              docChildren.push(
+                new Paragraph({
+                  heading: HeadingLevel.HEADING_3,
+                  spacing: { before: idx === 0 ? 0 : 280, after: 120 },
+                  children: [new TextRun({ text: `Halaman ${p.pageNumber}`, bold: true, size: 24 })]
+                })
+              );
+              p.lines.forEach((line) => {
+                docChildren.push(
+                  new Paragraph({
+                    spacing: { after: 120 },
+                    children: [new TextRun({ text: line, size: 22 })]
+                  })
+                );
+              });
+            });
+
+            const wordDoc = new Document({
+              sections: [{ properties: {}, children: docChildren }]
+            });
+
+            const docxBlob = await Packer.toBlob(wordDoc);
+            setProgress(100, "Dokumen Word Siap!");
+            addOutputCard({
+              blob: docxBlob,
+              filename: `${base}-editable.docx`,
+              subtitle: `Microsoft Word (.docx • ${total} Halaman)`,
+              previewType: "none"
+            });
+          }
+        }
+      } catch (err) {
+        hideProgress();
+        showAlert("Gagal mengonversi dokumen: " + err.message);
+      }
+    });
+
+    // Tombol Reset & Bersihkan Riwayat
+    document.getElementById("resetAllBtn").addEventListener("click", () => {
+      clearOutputCards();
+      clearAlert();
+      hideProgress();
+      ["mediaInput", "imageInput", "pdfInput", "docInput"].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+      ["mediaFileBadge", "imageCountBadge", "pdfFileBadge", "docFileBadge"].forEach((id) => {
+        document.getElementById(id).classList.add("hidden");
+      });
+      engineStateBadge.textContent = "Menunggu File";
+      engineStateBadge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-semibold";
+    });
+
+    document.getElementById("clearLogBtn").addEventListener("click", () => {
+      activityLog.innerHTML = '<p class="text-[11px] text-slate-500 italic">Belum ada aktivitas pada sesi ini.</p>';
+    });
   </script>
 </body>
 </html>
