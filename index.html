@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HiRes Media Hub — Video & Lossless Audio</title>
+  <title>SenHub — Video & Hi-Res Audio Downloader</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
       color: #f8fafc;
     }
     .glass-card {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.78);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(148, 163, 184, 0.15);
     }
@@ -26,50 +26,76 @@
     }
   </style>
 </head>
-<body class="antialiased selection:bg-cyan-500 selection:text-white pb-16">
+<body class="antialiased selection:bg-cyan-500 selection:text-white pb-14">
 
   <!-- Navbar -->
   <header class="border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md sticky top-0 z-30">
     <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <i class="fa-solid fa-wave-square text-white text-lg"></i>
+          <i class="fa-solid fa-cloud-arrow-down text-white text-lg"></i>
         </div>
         <div>
-          <h1 class="font-extrabold text-lg tracking-tight leading-none">HiRes<span class="text-cyan-400">Hub</span></h1>
-          <p class="text-xs text-slate-400 mt-0.5">Video & Hi-Res Audio Utility</p>
+          <h1 class="font-extrabold text-lg tracking-tight leading-none">
+            Sen<span class="text-cyan-400">Hub</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold ml-1">v2.0</span>
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5">by kabellasensen • Media Utility</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 text-xs font-medium text-slate-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800">
+
+      <button id="toggleEngineModalBtn" type="button" class="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-700 transition">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Frontend Ready
-      </div>
+        <span id="activeEngineLabel">Cloud Engine Aktif</span>
+        <i class="fa-solid fa-sliders text-slate-400 ml-1"></i>
+      </button>
     </div>
   </header>
 
+  <!-- Modal Pengaturan Engine (Opsional untuk Custom Backend) -->
+  <div id="engineModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-base text-white">Pengaturan Mesin SenHub</h3>
+        <button id="closeModalBtn" type="button" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+        Secara bawaan, <strong>SenHub</strong> memakai <strong>Cloud Engine Publik</strong> agar langsung berfungsi di GitHub Pages. Jika Anda memiliki server API pribadi (<code>yt-dlp</code>), masukkan URL-nya di bawah agar bebas iklan.
+      </p>
+      <label class="block text-xs font-semibold text-slate-300 mb-1.5">Custom Backend API URL (Kosongkan untuk Cloud Engine)</label>
+      <input id="customApiInput" type="url" placeholder="https://server-anda.com/download" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white mb-4 outline-none focus:border-cyan-400" />
+      <div class="flex justify-end gap-2">
+        <button id="resetEngineBtn" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Gunakan Cloud Bawaan</button>
+        <button id="saveEngineBtn" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400">Simpan</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Konten Utama -->
-  <main class="max-w-4xl mx-auto px-4 pt-10">
+  <main class="max-w-4xl mx-auto px-4 pt-8">
 
     <!-- Hero Title -->
-    <div class="text-center max-w-2xl mx-auto mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-4">
-        <i class="fa-solid fa-bolt"></i> Mendukung Preview Metadata & Audio Lossless
+    <div class="text-center max-w-2xl mx-auto mb-7">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-3">
+        <i class="fa-solid fa-graduation-cap"></i> Proyek Edukasi Web • Video 4K & Lossless Audio
       </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-white via-slate-200 to-cyan-300 bg-clip-text text-transparent">
-        Analisis & Unduh Media Kualitas Tinggi
+      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2.5 bg-gradient-to-r from-white via-slate-200 to-cyan-300 bg-clip-text text-transparent">
+        SenHub Media Downloader
       </h2>
-      <p class="text-slate-400 text-sm sm:text-base">
-        Tempel tautan YouTube, TikTok, Instagram, atau URL media langsung untuk memeriksa pratinjau, mengambil sampul HD, dan memproses format pilihan Anda.
+      <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+        Tempel tautan YouTube, TikTok, Instagram, atau URL file langsung untuk memeriksa metadata, menyimpan <em>thumbnail</em> HD, dan mengonversi media ke format kualitas tinggi.
       </p>
     </div>
 
-    <!-- Panel Input Utama -->
-    <section class="glass-card rounded-2xl p-5 sm:p-7 shadow-2xl mb-8">
+    <!-- Panel Input -->
+    <section class="glass-card rounded-2xl p-5 sm:p-7 shadow-2xl mb-7">
 
       <!-- Indikator Platform -->
       <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Platform Terdeteksi:</span>
-        <div class="flex flex-wrap gap-2" id="platformBadges">
+        <div class="flex flex-wrap gap-2">
           <span data-plat="youtube" class="plat-badge px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/80 text-slate-400 border border-slate-700/70 transition">
             <i class="fa-brands fa-youtube mr-1"></i> YouTube
           </span>
@@ -86,36 +112,35 @@
       </div>
 
       <!-- Kolom URL -->
-      <div class="flex flex-col sm:flex-row gap-3 mb-6">
+      <div class="flex flex-col sm:flex-row gap-3 mb-5">
         <div class="relative flex-1">
           <input
             id="urlInput"
             type="url"
-            placeholder="Tempel tautan video atau file media di sini (https://...)"
-            class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-20 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition"
+            placeholder="Tempel link YouTube, TikTok, atau Instagram di sini..."
+            class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-24 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition"
           />
           <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            <button id="pasteBtn" type="button" title="Tempel dari Clipboard" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg transition">
+            <button id="pasteBtn" type="button" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg transition">
               Tempel
             </button>
-            <button id="clearBtn" type="button" title="Bersihkan" class="hidden p-1.5 text-slate-400 hover:text-rose-400 transition">
+            <button id="clearBtn" type="button" class="hidden p-1.5 text-slate-400 hover:text-rose-400 transition">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </div>
         <button
-          id="analyzeBtn"
+          id="processBtn"
           type="button"
           class="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition active:scale-95"
         >
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <span>Analisis Link</span>
+          <i class="fa-solid fa-bolt"></i>
+          <span>Siapkan Download</span>
         </button>
       </div>
 
       <!-- Pemilih Mode & Kualitas -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800/80">
-        <!-- Tab Tipe Media -->
         <div>
           <label class="block text-xs font-semibold text-slate-400 mb-2">Tipe Output</label>
           <div class="grid grid-cols-2 gap-2 bg-slate-900 p-1 rounded-xl border border-slate-800">
@@ -128,121 +153,157 @@
           </div>
         </div>
 
-        <!-- Dropdown Kualitas -->
         <div>
           <label for="qualitySelect" class="block text-xs font-semibold text-slate-400 mb-2">Kualitas & Format</label>
           <select
             id="qualitySelect"
             class="w-full bg-slate-900 border border-slate-800 focus:border-cyan-400 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-slate-200 outline-none"
-          >
-            <!-- Diisi otomatis lewat JS -->
-          </select>
+          ></select>
         </div>
       </div>
 
-      <!-- Notifikasi Status / Error -->
-      <div id="statusBox" class="hidden mt-5 rounded-xl p-4 text-xs sm:text-sm border"></div>
+      <!-- Kotak Info / Alert -->
+      <div id="statusBox" class="hidden mt-4 rounded-xl p-3.5 text-xs sm:text-sm border"></div>
     </section>
 
-    <!-- Hasil Analisis & Preview -->
-    <section id="resultSection" class="hidden glass-card rounded-2xl p-5 sm:p-6 shadow-2xl mb-8">
-      <div class="flex flex-col md:flex-row gap-5 items-start">
-        <!-- Gambar Sampul -->
-        <div class="w-full md:w-64 shrink-0">
+    <!-- Area Hasil & Tombol Eksekusi Download -->
+    <section id="resultSection" class="hidden glass-card rounded-2xl p-5 sm:p-6 shadow-2xl mb-7 border border-cyan-500/30">
+      <div class="flex flex-col md:flex-row gap-5 items-start mb-5">
+        <!-- Thumbnail -->
+        <div class="w-full md:w-60 shrink-0">
           <div class="relative rounded-xl overflow-hidden bg-slate-900 border border-slate-800 aspect-video flex items-center justify-center">
-            <img id="previewThumb" src="" alt="Thumbnail Media" class="w-full h-full object-cover hidden" />
+            <img id="previewThumb" src="" alt="Thumbnail" class="w-full h-full object-cover hidden" />
             <div id="thumbPlaceholder" class="text-slate-600 flex flex-col items-center gap-2">
-              <i class="fa-solid fa-photo-film text-3xl"></i>
-              <span class="text-xs">Tanpa Pratinjau Gambar</span>
+              <i class="fa-solid fa-circle-play text-3xl"></i>
+              <span class="text-xs">Siap Diproses</span>
             </div>
-            <span id="previewBadge" class="absolute top-2 left-2 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-950/85 text-cyan-300 border border-slate-700"></span>
+            <span id="previewBadge" class="absolute top-2 left-2 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold bg-slate-950/90 text-cyan-300 border border-slate-700"></span>
           </div>
         </div>
 
-        <!-- Detail & Tombol Aksi -->
+        <!-- Metadata -->
         <div class="flex-1 w-full">
           <h3 id="previewTitle" class="font-bold text-base sm:text-lg text-white leading-snug mb-1">Judul Media</h3>
-          <p id="previewAuthor" class="text-xs text-slate-400 mb-4">Sumber / Kreator</p>
+          <p id="previewAuthor" class="text-xs text-slate-400 mb-2">Sumber Media</p>
+          <p id="cleanedUrlInfo" class="text-[11px] text-emerald-400 mb-3 hidden">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Parameter playlist dibersihkan otomatis agar unduhan akurat.
+          </p>
 
-          <div class="flex flex-wrap items-center gap-2 mb-5">
+          <div class="flex flex-wrap gap-2">
             <span id="selectedFormatBadge" class="px-3 py-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold"></span>
-          </div>
-
-          <div class="flex flex-wrap gap-3">
-            <button
-              id="downloadMediaBtn"
-              type="button"
-              class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-emerald-500/20"
-            >
-              <i class="fa-solid fa-download"></i>
-              <span>Proses & Unduh Media</span>
-            </button>
-
-            <button
-              id="downloadThumbBtn"
-              type="button"
-              class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-slate-700 flex items-center gap-2 transition"
-            >
-              <i class="fa-regular fa-image"></i>
-              <span>Unduh Thumbnail HD</span>
+            <button id="downloadThumbBtn" type="button" class="hidden px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+              <i class="fa-regular fa-image mr-1"></i> Simpan Thumbnail HD
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Panel Mesin Pengunduh Cloud (Aktif Otomatis) -->
+      <div id="cloudWidgetBox" class="bg-slate-950/80 border border-slate-800 rounded-xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <span class="text-xs font-bold text-cyan-300 flex items-center gap-2">
+            <i class="fa-solid fa-server"></i> Klik tombol di bawah untuk mengonversi & menyimpan file:
+          </span>
+          <div class="flex gap-1.5">
+            <button id="modeCompactBtn" type="button" class="px-2.5 py-1 rounded text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Mode Cepat</button>
+            <button id="modeCardBtn" type="button" class="px-2.5 py-1 rounded text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700">Mode Detail</button>
+          </div>
+        </div>
+
+        <!-- Container Iframe Cloud Converter -->
+        <div id="iframeWrapper" class="w-full overflow-hidden rounded-xl bg-slate-900 flex items-center justify-center min-h-[68px]"></div>
+
+        <p class="text-[11px] text-slate-400 mt-3 leading-relaxed">
+          <i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>
+          <strong>Tips:</strong> Jika server publik membuka tab iklan baru saat diklik, cukup tutup tab baru tersebut—proses konversi & <em>download</em> file asli Anda tetap berjalan di kotak atas.
+        </p>
+      </div>
+
+      <!-- Tombol Eksekusi jika memakai Custom API / File Langsung -->
+      <div id="directActionBox" class="hidden pt-2">
+        <button id="directDownloadBtn" type="button" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-download"></i>
+          <span>Unduh Sekarang</span>
+        </button>
       </div>
     </section>
 
     <!-- Riwayat Lokal -->
-    <section class="glass-card rounded-2xl p-5 sm:p-6">
+    <section class="glass-card rounded-2xl p-5 sm:p-6 mb-7">
       <div class="flex items-center justify-between mb-4">
         <h3 class="font-bold text-sm sm:text-base flex items-center gap-2">
           <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
-          Riwayat Analisis Terakhir
+          Riwayat Tautan Terakhir
         </h3>
         <button id="clearHistoryBtn" type="button" class="text-xs text-slate-400 hover:text-rose-400 font-medium transition">
           Hapus Semua
         </button>
       </div>
-      <div id="historyList" class="space-y-3 text-sm text-slate-400">
-        <!-- Dirender via JS -->
-      </div>
+      <div id="historyList" class="space-y-2.5 text-sm text-slate-400"></div>
     </section>
 
-    <!-- Footer Catatan Hak Cipta -->
-    <footer class="text-center text-xs text-slate-500 mt-8 leading-relaxed">
-      Gunakan alat ini secara bijak hanya untuk konten milik pribadi, materi domain publik, atau media dengan izin kreator sesuai ketentuan layanan masing-masing platform.
+    <!-- Informasi Pengembang & Ketentuan Penggunaan Edukasi -->
+    <footer class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-800/90">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white">Tentang SenHub</h4>
+            <p class="text-xs text-slate-400">Dirancang & dikembangkan oleh <span class="text-cyan-400 font-semibold">kabellasensen</span></p>
+          </div>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-[11px] font-semibold">
+          Tujuan Edukasi & Non-Komersial
+        </span>
+      </div>
+
+      <div class="space-y-2 text-xs text-slate-400 leading-relaxed">
+        <p>
+          <strong>Pernyataan Tujuan & Penggunaan Bijak:</strong> Website <strong>SenHub</strong> dibuat dan dikembangkan oleh <strong>kabellasensen</strong> semata-mata sebagai sarana pembelajaran serta edukasi pengembangan teknologi web.
+        </p>
+        <p>
+          Pengguna diharapkan menggunakan layanan ini secara bijak dan bertanggung jawab. Pastikan Anda hanya mengunduh konten milik pribadi, materi berlisensi bebas (<em>Creative Commons</em> / domain publik), atau media yang telah memperoleh izin resmi dari kreator aslinya, serta senantiasa mematuhi Ketentuan Layanan (<em>Terms of Service</em>) yang berlaku pada masing-masing platform.
+        </p>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+        <span>&copy; 2026 SenHub — Dikembangkan oleh kabellasensen.</span>
+        <span>Hak cipta seluruh media sepenuhnya milik masing-masing kreator asli.</span>
+      </div>
     </footer>
 
   </main>
 
   <script>
-    // =========================================================================
-    // KONFIGURASI BACKEND (OPSIONAL)
-    // Isi dengan URL endpoint server milik Anda jika ingin memproses stream.
-    // Contoh: const BACKEND_API_URL = "https://api-domain-anda.com/process";
-    // =========================================================================
-    const BACKEND_API_URL = "";
-
+    // Kode format yang didukung langsung oleh Cloud Converter
     const QUALITY_OPTIONS = {
       video: [
-        { value: "2160p_mp4", label: "4K Ultra HD (2160p) — MP4" },
-        { value: "1080p_mp4", label: "Full HD (1080p 60fps) — MP4" },
-        { value: "720p_mp4", label: "HD Ready (720p) — MP4" }
+        { value: "1080", label: "Full HD (1080p) — MP4" },
+        { value: "4k", label: "4K Ultra HD (2160p) — MP4" },
+        { value: "1440", label: "2K QHD (1440p) — MP4" },
+        { value: "720", label: "HD Ready (720p) — MP4" },
+        { value: "480", label: "Hemat Kuota (480p) — MP4" }
       ],
       audio: [
-        { value: "flac_24bit", label: "Hi-Res FLAC (24-bit / 96kHz Lossless)" },
-        { value: "wav_16bit", label: "Studio WAV (Uncompressed PCM)" },
-        { value: "mp3_320", label: "MP3 Extreme Quality (320 kbps)" }
+        { value: "flac", label: "Hi-Res FLAC (Lossless Audio)" },
+        { value: "wav", label: "Studio WAV (Uncompressed PCM)" },
+        { value: "mp3", label: "MP3 High Quality (320 kbps)" },
+        { value: "m4a", label: "M4A / AAC Audio" },
+        { value: "opus", label: "OPUS High Efficiency" }
       ]
     };
 
     let currentMode = "video";
+    let widgetStyle = "compact";
     let currentAnalysis = null;
 
-    // Referensi Elemen DOM
+    // Elemen DOM
     const urlInput = document.getElementById("urlInput");
     const pasteBtn = document.getElementById("pasteBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const analyzeBtn = document.getElementById("analyzeBtn");
+    const processBtn = document.getElementById("processBtn");
     const tabVideo = document.getElementById("tabVideo");
     const tabAudio = document.getElementById("tabAudio");
     const qualitySelect = document.getElementById("qualitySelect");
@@ -253,20 +314,43 @@
     const previewBadge = document.getElementById("previewBadge");
     const previewTitle = document.getElementById("previewTitle");
     const previewAuthor = document.getElementById("previewAuthor");
+    const cleanedUrlInfo = document.getElementById("cleanedUrlInfo");
     const selectedFormatBadge = document.getElementById("selectedFormatBadge");
-    const downloadMediaBtn = document.getElementById("downloadMediaBtn");
     const downloadThumbBtn = document.getElementById("downloadThumbBtn");
+    const cloudWidgetBox = document.getElementById("cloudWidgetBox");
+    const iframeWrapper = document.getElementById("iframeWrapper");
+    const modeCompactBtn = document.getElementById("modeCompactBtn");
+    const modeCardBtn = document.getElementById("modeCardBtn");
+    const directActionBox = document.getElementById("directActionBox");
+    const directDownloadBtn = document.getElementById("directDownloadBtn");
     const historyList = document.getElementById("historyList");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
-    // Sanitasi teks sederhana agar aman dari injeksi HTML
+    // Modal Engine
+    const engineModal = document.getElementById("engineModal");
+    const toggleEngineModalBtn = document.getElementById("toggleEngineModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const customApiInput = document.getElementById("customApiInput");
+    const saveEngineBtn = document.getElementById("saveEngineBtn");
+    const resetEngineBtn = document.getElementById("resetEngineBtn");
+    const activeEngineLabel = document.getElementById("activeEngineLabel");
+
+    function getCustomApi() {
+      return (localStorage.getItem("senhub_custom_api") || "").trim();
+    }
+
+    function updateEngineLabel() {
+      const api = getCustomApi();
+      activeEngineLabel.textContent = api ? "Custom Server Aktif" : "Cloud Engine Aktif";
+      customApiInput.value = api;
+    }
+
     function escapeHtml(str) {
       const div = document.createElement("div");
       div.textContent = str || "";
       return div.innerHTML;
     }
 
-    // Render pilihan kualitas
     function renderQualityOptions() {
       qualitySelect.innerHTML = "";
       QUALITY_OPTIONS[currentMode].forEach((opt) => {
@@ -275,15 +359,9 @@
         el.textContent = opt.label;
         qualitySelect.appendChild(el);
       });
-      updateSelectedBadge();
+      if (currentAnalysis) refreshDownloadEngine();
     }
 
-    function updateSelectedBadge() {
-      const selectedText = qualitySelect.options[qualitySelect.selectedIndex]?.textContent || "";
-      selectedFormatBadge.textContent = "Target: " + selectedText;
-    }
-
-    // Deteksi platform berdasarkan URL
     function detectPlatform(url) {
       const lower = url.toLowerCase().trim();
       if (!lower) return null;
@@ -294,14 +372,25 @@
       return "other";
     }
 
-    // Ekstrak Video ID YouTube
     function extractYouTubeId(url) {
       const regExp = /(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
       const match = url.match(regExp);
       return match ? match[1] : null;
     }
 
-    // Sorot lencana platform aktif
+    function cleanMediaUrl(rawUrl, platform) {
+      if (platform === "youtube") {
+        const ytId = extractYouTubeId(rawUrl);
+        if (ytId) {
+          return {
+            cleanUrl: `https://www.youtube.com/watch?v=${ytId}`,
+            wasCleaned: rawUrl.includes("list=") || rawUrl.includes("si=")
+          };
+        }
+      }
+      return { cleanUrl: rawUrl, wasCleaned: false };
+    }
+
     function highlightBadge(platform) {
       document.querySelectorAll(".plat-badge").forEach((badge) => {
         if (badge.dataset.plat === platform) {
@@ -312,103 +401,93 @@
       });
     }
 
-    // Tampilkan pesan status
-    function showStatus(message, type = "info") {
-      statusBox.classList.remove("hidden", "bg-rose-500/10", "border-rose-500/30", "text-rose-300", "bg-amber-500/10", "border-amber-500/30", "text-amber-200", "bg-cyan-500/10", "border-cyan-500/30", "text-cyan-200");
+    function showStatus(msg, type = "error") {
+      statusBox.classList.remove("hidden", "bg-rose-500/10", "border-rose-500/30", "text-rose-300", "bg-cyan-500/10", "border-cyan-500/30", "text-cyan-200");
       if (type === "error") {
         statusBox.classList.add("bg-rose-500/10", "border-rose-500/30", "text-rose-300");
-      } else if (type === "warn") {
-        statusBox.classList.add("bg-amber-500/10", "border-amber-500/30", "text-amber-200");
       } else {
         statusBox.classList.add("bg-cyan-500/10", "border-cyan-500/30", "text-cyan-200");
       }
-      statusBox.textContent = message;
+      statusBox.textContent = msg;
     }
 
-    function hideStatus() {
-      statusBox.classList.add("hidden");
-    }
-
-    // Analisis URL
-    async function analyzeUrl() {
+    async function processLink() {
       const rawUrl = urlInput.value.trim();
-      hideStatus();
+      statusBox.classList.add("hidden");
 
       if (!rawUrl) {
-        showStatus("Masukkan tautan URL terlebih dahulu sebelum menganalisis.", "error");
+        showStatus("Silakan tempel tautan video terlebih dahulu.");
         return;
       }
 
-      let parsedUrl;
+      let parsed;
       try {
-        parsedUrl = new URL(rawUrl);
+        parsed = new URL(rawUrl);
       } catch {
-        showStatus("Format URL tidak valid. Pastikan diawali https:// atau http://.", "error");
+        showStatus("Format URL tidak valid. Pastikan diawali https://");
         return;
       }
 
-      const platform = detectPlatform(parsedUrl.href);
+      const platform = detectPlatform(parsed.href);
       highlightBadge(platform);
 
-      analyzeBtn.disabled = true;
-      analyzeBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Memeriksa...</span>';
+      const { cleanUrl, wasCleaned } = cleanMediaUrl(parsed.href, platform);
+      if (wasCleaned) urlInput.value = cleanUrl;
+
+      processBtn.disabled = true;
+      processBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Memuat...</span>';
 
       let meta = {
-        url: parsedUrl.href,
+        url: cleanUrl,
         platform: platform.toUpperCase(),
         title: "Media " + platform.toUpperCase(),
-        author: parsedUrl.hostname,
-        thumbnail: ""
+        author: parsed.hostname,
+        thumbnail: "",
+        wasCleaned
       };
 
       try {
         if (platform === "youtube") {
-          const ytId = extractYouTubeId(parsedUrl.href);
-          if (ytId) {
-            meta.thumbnail = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
-          }
-          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(parsedUrl.href)}`);
+          const ytId = extractYouTubeId(cleanUrl);
+          if (ytId) meta.thumbnail = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(cleanUrl)}`);
           if (res.ok) {
             const data = await res.json();
             if (data.title) meta.title = data.title;
             if (data.author_name) meta.author = "Channel: " + data.author_name;
-            if (!meta.thumbnail && data.thumbnail_url) meta.thumbnail = data.thumbnail_url;
           }
         } else if (platform === "tiktok") {
-          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(parsedUrl.href)}`);
+          const res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(cleanUrl)}`);
           if (res.ok) {
             const data = await res.json();
             if (data.title) meta.title = data.title;
-            if (data.author_name) meta.author = "Kreator TikTok: @" + data.author_name;
+            if (data.author_name) meta.author = "TikTok: @" + data.author_name;
             if (data.thumbnail_url) meta.thumbnail = data.thumbnail_url;
           }
         } else if (platform === "instagram") {
-          meta.title = "Konten Instagram (Reels / Post)";
+          meta.title = "Instagram Reels / Video Post";
           meta.author = "instagram.com";
         } else if (platform === "direct") {
-          const fileName = parsedUrl.pathname.split("/").pop() || "File Media Langsung";
-          meta.title = decodeURIComponent(fileName);
-          meta.author = "Sumber Langsung: " + parsedUrl.hostname;
+          meta.title = decodeURIComponent(parsed.pathname.split("/").pop() || "File Media");
         }
       } catch {
-        // Tetap tampilkan kartu meski pengambilan metadata publik gagal
+        // Lanjut meski pengambilan metadata gagal
       }
 
       currentAnalysis = meta;
-      renderResultCard(meta);
-      saveToHistory(meta);
+      renderResult(meta);
+      saveHistory(meta);
 
-      analyzeBtn.disabled = false;
-      analyzeBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i><span>Analisis Link</span>';
+      processBtn.disabled = false;
+      processBtn.innerHTML = '<i class="fa-solid fa-bolt"></i><span>Siapkan Download</span>';
     }
 
-    // Tampilkan kartu hasil
-    function renderResultCard(meta) {
+    function renderResult(meta) {
       resultSection.classList.remove("hidden");
       previewBadge.textContent = meta.platform;
       previewTitle.textContent = meta.title;
       previewAuthor.textContent = meta.author;
-      updateSelectedBadge();
+      cleanedUrlInfo.classList.toggle("hidden", !meta.wasCleaned);
 
       if (meta.thumbnail) {
         previewThumb.src = meta.thumbnail;
@@ -416,138 +495,97 @@
         thumbPlaceholder.classList.add("hidden");
         downloadThumbBtn.classList.remove("hidden");
       } else {
-        previewThumb.src = "";
         previewThumb.classList.add("hidden");
         thumbPlaceholder.classList.remove("hidden");
         downloadThumbBtn.classList.add("hidden");
       }
+
+      refreshDownloadEngine();
     }
 
-    // Proses Unduh Media
-    async function handleDownloadMedia() {
+    function refreshDownloadEngine() {
       if (!currentAnalysis) return;
-      const formatLabel = qualitySelect.options[qualitySelect.selectedIndex]?.textContent || "";
+      const formatCode = qualitySelect.value;
+      const formatText = qualitySelect.options[qualitySelect.selectedIndex]?.textContent || "";
+      selectedFormatBadge.textContent = "Format: " + formatText;
 
-      // 1. Jika tautan merupakan file media langsung (.mp4, .mp3, .wav, .flac)
+      const customApi = getCustomApi();
+
+      if (currentAnalysis.platform === "DIRECT" || customApi) {
+        cloudWidgetBox.classList.add("hidden");
+        directActionBox.classList.remove("hidden");
+        return;
+      }
+
+      directActionBox.classList.add("hidden");
+      cloudWidgetBox.classList.remove("hidden");
+
+      const encodedUrl = encodeURIComponent(currentAnalysis.url);
+      if (widgetStyle === "compact") {
+        const widgetUrl = `https://loader.to/api/button/?url=${encodedUrl}&f=${encodeURIComponent(formatCode)}&color=06b6d4`;
+        iframeWrapper.innerHTML = `<iframe src="${widgetUrl}" class="w-full h-[64px] border-0" scrolling="no" allowtransparency="true"></iframe>`;
+      } else {
+        const cardUrl = `https://loader.to/api/card2/?url=${encodedUrl}&css=`;
+        iframeWrapper.innerHTML = `<iframe src="${cardUrl}" class="w-full min-h-[380px] border-0 rounded-lg" scrolling="auto"></iframe>`;
+      }
+    }
+
+    async function handleDirectOrCustomDownload() {
+      if (!currentAnalysis) return;
       if (currentAnalysis.platform === "DIRECT") {
-        showStatus("Memulai pengunduhan file media langsung...", "info");
-        const a = document.createElement("a");
-        a.href = currentAnalysis.url;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.setAttribute("download", currentAnalysis.title);
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        window.open(currentAnalysis.url, "_blank", "noopener,noreferrer");
         return;
       }
-
-      // 2. Jika variabel BACKEND_API_URL sudah diisi oleh pemilik web
-      if (BACKEND_API_URL.trim() !== "") {
-        try {
-          showStatus("Menghubungi server pemroses untuk format " + formatLabel + "...", "info");
-          const response = await fetch(BACKEND_API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              url: currentAnalysis.url,
-              mode: currentMode,
-              quality: qualitySelect.value
-            })
-          });
-          const result = await response.json();
-          if (result.downloadUrl) {
-            window.location.href = result.downloadUrl;
-          } else {
-            showStatus(result.message || "Server tidak mengembalikan tautan unduhan.", "warn");
-          }
-        } catch {
-          showStatus("Gagal terhubung ke server BACKEND_API_URL. Periksa konfigurasi endpoint Anda.", "error");
-        }
-        return;
-      }
-
-      // 3. Penjelasan jujur saat berjalan statis murni di GitHub Pages tanpa backend
-      showStatus(
-        "Info Arsitektur Statis: GitHub Pages hanya menjalankan antarmuka depan (frontend). Untuk mengekstrak stream " +
-        currentAnalysis.platform + " ke format [" + formatLabel + "], isi variabel BACKEND_API_URL di dalam kode index.html dengan endpoint server API pemroses milik Anda.",
-        "warn"
-      );
-    }
-
-    // Unduh Thumbnail HD
-    async function handleDownloadThumb() {
-      if (!currentAnalysis || !currentAnalysis.thumbnail) return;
-      try {
-        const res = await fetch(currentAnalysis.thumbnail);
-        const blob = await res.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = "thumbnail-hd.jpg";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(blobUrl);
-      } catch {
-        window.open(currentAnalysis.thumbnail, "_blank", "noopener,noreferrer");
+      const customApi = getCustomApi();
+      if (customApi) {
+        const target = `${customApi}?url=${encodeURIComponent(currentAnalysis.url)}&format=${encodeURIComponent(qualitySelect.value)}`;
+        window.open(target, "_blank", "noopener,noreferrer");
       }
     }
 
-    // Manajemen Riwayat di localStorage
     function getHistory() {
       try {
-        return JSON.parse(localStorage.getItem("hires_hub_history") || "[]");
+        return JSON.parse(localStorage.getItem("senhub_v2_history") || "[]");
       } catch {
         return [];
       }
     }
 
-    function saveToHistory(meta) {
-      const list = getHistory().filter((item) => item.url !== meta.url);
+    function saveHistory(meta) {
+      const list = getHistory().filter((i) => i.url !== meta.url);
       list.unshift({
         url: meta.url,
         title: meta.title,
         platform: meta.platform,
-        format: qualitySelect.options[qualitySelect.selectedIndex]?.textContent || "",
-        time: new Date().toLocaleString("id-ID")
+        time: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
       });
-      localStorage.setItem("hires_hub_history", JSON.stringify(list.slice(0, 8)));
+      localStorage.setItem("senhub_v2_history", JSON.stringify(list.slice(0, 6)));
       renderHistory();
     }
 
     function renderHistory() {
       const list = getHistory();
-      if (list.length === 0) {
-        historyList.innerHTML = '<p class="text-xs text-slate-500 italic">Belum ada tautan yang dianalisis pada perangkat ini.</p>';
+      if (!list.length) {
+        historyList.innerHTML = '<p class="text-xs text-slate-500 italic">Belum ada riwayat unduhan di SenHub.</p>';
         return;
       }
-
       historyList.innerHTML = list.map((item) => `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-900/75 border border-slate-800/90 rounded-xl p-3">
+        <div class="flex items-center justify-between gap-2 bg-slate-900/75 border border-slate-800 rounded-xl p-3">
           <div class="min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
-              <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-slate-800 text-cyan-300">${escapeHtml(item.platform)}</span>
-              <span class="text-[11px] text-slate-500">${escapeHtml(item.time)}</span>
-            </div>
-            <p class="text-xs sm:text-sm font-semibold text-slate-200 truncate">${escapeHtml(item.title)}</p>
-            <p class="text-[11px] text-indigo-300 truncate">${escapeHtml(item.format)}</p>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-cyan-300 mr-1.5">${escapeHtml(item.platform)}</span>
+            <span class="text-xs font-semibold text-slate-200 truncate">${escapeHtml(item.title)}</span>
           </div>
-          <button
-            type="button"
-            data-url="${escapeHtml(item.url)}"
-            class="reload-btn shrink-0 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition"
-          >
-            Muat Ulang
+          <button type="button" data-url="${escapeHtml(item.url)}" class="reload-item shrink-0 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg border border-slate-700">
+            Pilih Lagi
           </button>
         </div>
       `).join("");
 
-      document.querySelectorAll(".reload-btn").forEach((btn) => {
+      document.querySelectorAll(".reload-item").forEach((btn) => {
         btn.addEventListener("click", () => {
           urlInput.value = btn.dataset.url;
           clearBtn.classList.remove("hidden");
-          analyzeUrl();
+          processLink();
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
       });
@@ -569,7 +607,7 @@
           highlightBadge(detectPlatform(text));
         }
       } catch {
-        showStatus("Izin clipboard ditolak browser. Silakan tempel manual (Ctrl+V atau tahan layar).", "warn");
+        showStatus("Silakan tempel manual menggunakan Ctrl+V atau tahan layar.");
       }
     });
 
@@ -577,7 +615,6 @@
       urlInput.value = "";
       clearBtn.classList.add("hidden");
       highlightBadge(null);
-      hideStatus();
     });
 
     tabVideo.addEventListener("click", () => {
@@ -598,17 +635,51 @@
       renderQualityOptions();
     });
 
-    qualitySelect.addEventListener("change", updateSelectedBadge);
-    analyzeBtn.addEventListener("click", analyzeUrl);
-    downloadMediaBtn.addEventListener("click", handleDownloadMedia);
-    downloadThumbBtn.addEventListener("click", handleDownloadThumb);
+    qualitySelect.addEventListener("change", refreshDownloadEngine);
+    processBtn.addEventListener("click", processLink);
+    directDownloadBtn.addEventListener("click", handleDirectOrCustomDownload);
+
+    modeCompactBtn.addEventListener("click", () => {
+      widgetStyle = "compact";
+      modeCompactBtn.className = "px-2.5 py-1 rounded text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+      modeCardBtn.className = "px-2.5 py-1 rounded text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700";
+      refreshDownloadEngine();
+    });
+
+    modeCardBtn.addEventListener("click", () => {
+      widgetStyle = "card";
+      modeCardBtn.className = "px-2.5 py-1 rounded text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+      modeCompactBtn.className = "px-2.5 py-1 rounded text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700";
+      refreshDownloadEngine();
+    });
+
+    downloadThumbBtn.addEventListener("click", () => {
+      if (currentAnalysis?.thumbnail) window.open(currentAnalysis.thumbnail, "_blank", "noopener,noreferrer");
+    });
 
     clearHistoryBtn.addEventListener("click", () => {
-      localStorage.removeItem("hires_hub_history");
+      localStorage.removeItem("senhub_v2_history");
       renderHistory();
     });
 
-    // Inisialisasi awal
+    // Pengaturan Modal Engine
+    toggleEngineModalBtn.addEventListener("click", () => engineModal.classList.remove("hidden"));
+    closeModalBtn.addEventListener("click", () => engineModal.classList.add("hidden"));
+    saveEngineBtn.addEventListener("click", () => {
+      localStorage.setItem("senhub_custom_api", customApiInput.value.trim());
+      updateEngineLabel();
+      engineModal.classList.add("hidden");
+      if (currentAnalysis) refreshDownloadEngine();
+    });
+    resetEngineBtn.addEventListener("click", () => {
+      localStorage.removeItem("senhub_custom_api");
+      updateEngineLabel();
+      engineModal.classList.add("hidden");
+      if (currentAnalysis) refreshDownloadEngine();
+    });
+
+    // Inisialisasi
+    updateEngineLabel();
     renderQualityOptions();
     renderHistory();
   </script>
